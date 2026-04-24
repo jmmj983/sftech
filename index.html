@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>物流科技出海：效率差套利框架与市场选择</title>
+<title>物流科技出海：能力溢出套利框架与市场选择</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body {
@@ -194,28 +194,235 @@ body {
   .hbar-row { grid-template-columns: 80px 1fr 68px; gap: 8px; font-size: 13px; }
   .rec-country { font-size: 20px; }
 }
+
+/* ========== Floating toolbar ========== */
+.toolbar { position: fixed; right: 14px; bottom: 14px; z-index: 500; display: flex; flex-direction: column; gap: 8px; }
+.toolbar button {
+  background: #14140f; color: #f4f0e6; border: 0; border-radius: 22px;
+  padding: 10px 16px; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.22);
+  font-family: inherit;
+}
+.toolbar button:hover { background: #2a2a26; }
+.toolbar button.active { background: #d4b86e; color: #14140f; }
+
+/* ========== Editable mode visual feedback ========== */
+body.editing [contenteditable="true"] {
+  outline: 1px dashed rgba(212,184,110,.55);
+  outline-offset: 2px;
+  border-radius: 3px;
+  transition: outline-color .15s;
+}
+body.editing [contenteditable="true"]:hover { outline-color: #d4b86e; outline-style: solid; }
+body.editing [contenteditable="true"]:focus {
+  outline: 2px solid #d4b86e; outline-offset: 2px;
+  background: rgba(212,184,110,.08);
+}
+body.editing .tab-btn[contenteditable="true"] { cursor: text; }
+body.editing .zoom-btn { display: none; }
+
+/* ========== Chart zoom ========== */
+.mk-chart { position: relative; }
+.zoom-btn {
+  position: absolute; top: 10px; right: 10px; z-index: 3;
+  background: rgba(20,20,15,.82); color: #f4f0e6; border: 0;
+  padding: 6px 11px; font-size: 12px; font-weight: 600;
+  border-radius: 14px; cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; gap: 4px;
+  opacity: .85; transition: opacity .15s;
+}
+.zoom-btn:hover { opacity: 1; }
+.chart-modal {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(10,10,8,.92);
+  display: none; flex-direction: column;
+}
+.chart-modal.open { display: flex; }
+.chart-modal-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px; background: #14140f; color: #f4f0e6;
+  border-bottom: 1px solid #2a2a26;
+}
+.chart-modal-bar .cm-hint { font-size: 12px; color: #a8a090; }
+.chart-modal-bar .cm-close {
+  background: #d4b86e; color: #14140f; border: 0; padding: 7px 16px;
+  border-radius: 18px; font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: inherit;
+}
+.chart-modal-body {
+  flex: 1; overflow: auto; padding: 20px; background: #faf7ef;
+  -webkit-overflow-scrolling: touch;
+}
+.chart-modal-body > .mk-chart {
+  background: #fff; padding: 20px; border-radius: 8px;
+  min-width: 720px; max-width: 1400px; margin: 0 auto;
+}
+.chart-modal-body .scatter-svg { width: 100%; height: auto; }
+
+/* ========== Table of Contents ========== */
+.toc-toggle {
+  position: fixed; left: 14px; bottom: 14px; z-index: 500;
+  background: #14140f; color: #f4f0e6; border: 0; border-radius: 22px;
+  padding: 10px 16px; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.22); font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
+}
+.toc-toggle:hover { background: #2a2a26; }
+.toc-toggle .toc-icon { font-size: 14px; line-height: 1; }
+.toc-drawer {
+  position: fixed; top: 0; left: 0; height: 100vh; width: 280px;
+  background: #14140f; color: #f4f0e6; z-index: 600;
+  transform: translateX(-100%); transition: transform .28s ease;
+  display: flex; flex-direction: column;
+  box-shadow: 2px 0 20px rgba(0,0,0,.28);
+}
+.toc-drawer.open { transform: translateX(0); }
+.toc-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 599;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.toc-overlay.open { opacity: 1; pointer-events: auto; }
+.toc-head {
+  padding: 18px 20px 14px; border-bottom: 1px solid #2a2a26;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.toc-head-title { font-size: 14px; font-weight: 700; letter-spacing: .1em; color: #d4b86e; text-transform: uppercase; }
+.toc-close {
+  background: transparent; color: #a8a090; border: 0; font-size: 22px;
+  cursor: pointer; line-height: 1; padding: 0 4px;
+}
+.toc-list { flex: 1; overflow-y: auto; padding: 10px 0; }
+.toc-item {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 11px 20px; color: #d4cfc0; cursor: pointer;
+  font-size: 14.5px; line-height: 1.4; border-left: 3px solid transparent;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.toc-item:hover { background: #2a2a26; color: #f4f0e6; }
+.toc-item.active { border-left-color: #d4b86e; color: #d4b86e; background: #1e1e18; }
+.toc-num { font-size: 11px; font-weight: 700; color: #8a8475; min-width: 22px; letter-spacing: .05em; }
+.toc-item.active .toc-num { color: #d4b86e; }
+.toc-tag {
+  display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 3px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
+}
+.toc-tag.a { background: rgba(42,157,106,.22); color: #6fd09a; }
+.toc-tag.b { background: rgba(138,79,21,.28); color: #e0a86a; }
+.toc-foot { padding: 12px 20px; border-top: 1px solid #2a2a26; font-size: 12px; color: #6a6458; }
+
+/* ========== Chart tooltip ========== */
+.scatter-svg circle.bubble-hit {
+  cursor: pointer; transition: filter .12s, stroke-width .12s;
+}
+.scatter-svg circle.bubble-hit:hover {
+  filter: brightness(1.08) drop-shadow(0 0 4px rgba(212,184,110,.55));
+}
+.chart-tooltip {
+  position: fixed; z-index: 950;
+  background: #14140f; color: #f4f0e6;
+  padding: 10px 12px; border-radius: 8px;
+  font-size: 12.5px; line-height: 1.55;
+  box-shadow: 0 6px 24px rgba(0,0,0,.35);
+  pointer-events: none;
+  max-width: 260px; min-width: 180px;
+  opacity: 0; transform: translateY(-4px);
+  transition: opacity .14s, transform .14s;
+  border-left: 3px solid #d4b86e;
+}
+.chart-tooltip.visible { opacity: 1; transform: translateY(0); }
+.chart-tooltip .tt-country { font-size: 14px; font-weight: 700; color: #d4b86e; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.chart-tooltip .tt-badge { font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 3px; background: #2a2a26; color: #a8a090; letter-spacing: .04em; }
+.chart-tooltip .tt-row { display: flex; justify-content: space-between; gap: 12px; }
+.chart-tooltip .tt-row + .tt-row { margin-top: 2px; }
+.chart-tooltip .tt-k { color: #a8a090; }
+.chart-tooltip .tt-v { font-weight: 600; color: #f4f0e6; }
+.chart-tooltip .tt-note { margin-top: 6px; padding-top: 6px; border-top: 1px solid #2a2a26; font-size: 11.5px; color: #a8a090; }
+
+/* ========== Collapsible section ========== */
+.collapse-head {
+  cursor: pointer; user-select: none;
+  display: flex; align-items: center; gap: 10px;
+  transition: color .15s;
+}
+.collapse-head:hover { color: #8a4f15; }
+.collapse-caret {
+  display: inline-block; font-size: 16px; color: #8a8475;
+  transition: transform .22s; min-width: 12px;
+}
+.collapse-head.open .collapse-caret { transform: rotate(90deg); color: #8a4f15; }
+.collapse-count {
+  margin-left: auto; font-size: 12px; font-weight: 600;
+  color: #8a4f15; background: #fcf1de; padding: 3px 10px;
+  border-radius: 10px; letter-spacing: .02em;
+}
+.collapse-hint { font-size: 13px; color: #8a8475; }
+.collapse-body[hidden] { display: none; }
+.collapse-body { animation: collapseFade .22s ease; }
+@keyframes collapseFade { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 520px) {
+  .toolbar { right: 10px; bottom: 10px; }
+  .toolbar button, .toc-toggle { padding: 9px 13px; font-size: 12.5px; }
+  .toc-toggle { left: 10px; bottom: 10px; }
+  .toc-drawer { width: 84vw; }
+  .chart-tooltip { max-width: 200px; font-size: 12px; }
+}
+
 </style>
 </head>
 <body>
+<button id="toc-toggle" class="toc-toggle" type="button" aria-label="打开目录">
+  <span class="toc-icon">☰</span><span>目录</span>
+</button>
+<div id="toc-overlay" class="toc-overlay"></div>
+<nav id="toc-drawer" class="toc-drawer" aria-label="报告目录">
+  <div class="toc-head">
+    <span class="toc-head-title">目录 Contents</span>
+    <button type="button" class="toc-close" aria-label="关闭目录">×</button>
+  </div>
+  <div class="toc-list">
+    <a class="toc-item" data-target="sec-framework" data-tab=""><span class="toc-num">00</span><span>核心框架</span></a>
+    <a class="toc-item" data-target="sec-layer-1" data-tab="A"><span class="toc-num">01</span><span>第 1 层：效率差有多大<span class="toc-tag a">路径1</span></span></a>
+    <a class="toc-item" data-target="sec-layer-2" data-tab="A"><span class="toc-num">02</span><span>第 2 层：差距根因<span class="toc-tag a">路径1</span></span></a>
+    <a class="toc-item" data-target="sec-layer-3" data-tab="A"><span class="toc-num">03</span><span>第 3 层：规模 + 拐点<span class="toc-tag a">路径1</span></span></a>
+    <a class="toc-item" data-target="sec-layer-4" data-tab="A"><span class="toc-num">04</span><span>第 4 层：集团资源<span class="toc-tag a">路径1</span></span></a>
+    <a class="toc-item" data-target="sec-kenya" data-tab="B"><span class="toc-num">05</span><span>肯尼亚冷链案例<span class="toc-tag b">路径2</span></span></a>
+    <a class="toc-item" data-target="sec-recommend" data-tab=""><span class="toc-num">06</span><span>两条推荐路径</span></a>
+    <a class="toc-item" data-target="sec-weaknesses" data-tab=""><span class="toc-num">07</span><span>已知的推导弱点</span></a>
+  </div>
+  <div class="toc-foot">按 Esc 关闭 · 点击章节自动切换 Tab</div>
+</nav>
+<div id="chart-tooltip" class="chart-tooltip" role="tooltip"></div>
+<div class="toolbar">
+  <button id="edit-toggle" type="button" title="开启/关闭直接编辑模式">编辑模式</button>
+  <button id="export-html" type="button" title="导出当前（含修改）的 HTML">导出 HTML</button>
+</div>
+<div id="chart-modal" class="chart-modal" role="dialog" aria-modal="true">
+  <div class="chart-modal-bar">
+    <span class="cm-hint">横向滚动或双指缩放查看细节 · 按 Esc 关闭</span>
+    <button class="cm-close" type="button">关闭</button>
+  </div>
+  <div class="chart-modal-body"></div>
+</div>
 <div class="page">
 
 <div class="hero">
   <div class="hero-eyebrow">战略分析备忘录 · 2026.04</div>
-  <h1 class="hero-title">物流科技出海：<br><em>效率差套利</em>框架<br>与市场选择路径</h1>
-  <p class="hero-sub">从 12 个候选市场的公开数据出发，建立两类机会的识别方法。对标产品：B2B 供应链数字化平台（WMS/TMS/OMS + 供应链计划/控制塔 + AI 调度）。</p>
+等  <h1 class="hero-title">物流科技出海：<br><em>能力溢出套利</em>框架<br>与市场选择路径</h1>
+  <p class="hero-sub">中国已在本土完成供应链科技的<strong style="color:#d4b86e;font-weight:700">产品能力与规模落地验证</strong>——这套能力输出到效率/能力供应洼地市场获取溢价与市场机会。本报告从 12 个候选市场的公开数据出发，按三条件筛选两类机会。对标产品：B2B 供应链数字化平台（WMS/TMS/OMS + 供应链计划/控制塔 + AI 调度）。</p>
   <div class="hero-verdict">
     <strong>核心结论：</strong>综合市场路径 — 推荐 <strong>越南</strong>；垂直领域路径 — 推荐 <strong>肯尼亚出口农业冷链</strong>。两条路径的产品形态、客户画像、组织设计完全不同，需独立规划。
   </div>
 </div>
 
 <div class="global-note">
-  <strong>本报告定位：</strong>基于公开宏观数据和业务逻辑的初筛框架（filter），用于在 12 个候选市场中划分推荐 / 待论证 / 暂不建议三档。<strong>不是最终决策依据</strong>——任何落地均需补充：本地实地调研、集团内部资源核实、主要客户/合作方访谈、竞品深度比对。本报告的价值在于缩小调研范围、提供论证起点。
+  <strong>本报告定位：</strong>基于公开宏观数据和业务逻辑的初筛框架（filter），用于在 12 个候选市场中划分重点关注 / 待论证 / 暂不建议三档。<strong>不是最终决策依据</strong>——任何落地均需补充：本地实地调研、集团内部资源核实、主要客户/合作方访谈、竞品深度比对。本报告的价值在于缩小调研范围、提供论证起点。
 </div>
 
-<div class="section">
+<div class="section" id="sec-framework">
   <p class="sec-label">核心框架</p>
-  <h2 class="sec-title">效率差套利 = 三个条件同时成立</h2>
-  <p class="sec-body">国内已摊销研发成本的供应链科技能力，输出到海外有效率差的市场获取溢价。三个条件必须同时成立，缺一不可。</p>
+  <h2 class="sec-title">能力溢出套利 = 三个条件同时成立</h2>
+  <p class="sec-body">中国供应链科技已在全球最高密度、最复杂的 B2C 物流场景跑通，研发和组织成本基本摊销。这套能力<strong>按极低边际成本输出</strong>到还没走到这一步的市场，即可获取溢价。真正的套利来源是"<strong>规模化摊销后的成本结构</strong>"，不是"中国比别人效率高"。三个条件必须同时成立，缺一不可。</p>
 
   <div class="fw-box">
     <div class="fw-wrap">
@@ -228,7 +435,7 @@ body {
         <div class="fw-cards-inner two">
           <div class="fw-card">
             <span class="fw-num">条件 1</span>
-            <div class="fw-h">可对接的效率差</div>
+            <div class="fw-h">效率洼地 · 可由软件覆盖</div>
             <div class="fw-d">目标市场物流效率低于中国，且差距主要来自信息/调度层（产品可覆盖），非基础设施硬约束。</div>
             <div class="fw-m"><strong>数据：</strong>LPI 总分 + 子维度 · 物流成本/GDP <strong>（vs 中国）</strong></div>
           </div>
@@ -271,7 +478,7 @@ body {
   <div class="types-grid">
     <div class="type-card">
       <span class="type-badge">路径 1</span>
-      <div class="type-title">综合市场效率差套利</div>
+      <div class="type-title">综合市场能力溢出套利</div>
       <div class="type-desc">通用供应链数字化产品输出到物流效率洼地。按三个条件 × 四层数据筛选 12 个候选国。</div>
       <div class="type-meta">
         <strong>产品：</strong>WMS / TMS / OMS / 供应链计划<br>
@@ -305,7 +512,7 @@ body {
 
 <div class="tab-pane active" id="pane-A">
 
-<div class="section" style="padding-top:12px">
+<div class="section" id="sec-layer-1" style="padding-top:12px">
   <div class="filter-step">
     <div class="step-num">1</div>
     <div>
@@ -397,7 +604,7 @@ body {
   </div>
 </div>
 
-<div class="section">
+<div class="section" id="sec-layer-2">
   <div class="filter-step">
     <div class="step-num">2</div>
     <div>
@@ -454,8 +661,14 @@ body {
       <text x="376" y="166" text-anchor="middle" font-size="11" fill="#14140f" font-weight="700">沙特</text>
       <circle cx="438" cy="256" r="10" fill="#a8a090" stroke="#4a4540" stroke-width="1.5"/>
       <text x="438" y="242" text-anchor="middle" font-size="11" fill="#14140f" font-weight="600">菲律宾</text>
-      <circle cx="410" cy="290" r="17" fill="#2a9d6a" fill-opacity=".9" stroke="#0a3a1e" stroke-width="2.5"/>
-      <text x="410" y="294" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">越南</text>
+      <circle cx="444" cy="274" r="17" fill="#2a9d6a" fill-opacity=".9" stroke="#0a3a1e" stroke-width="2.5"/>
+      <text x="444" y="278" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">越南</text>
+      <g>
+        <line x1="478" y1="274" x2="600" y2="250" stroke="#0a3a1e" stroke-width="1" stroke-dasharray="3,2"/>
+        <rect x="598" y="236" width="148" height="38" fill="#fff" stroke="#0a3a1e" stroke-width="1"/>
+        <text x="605" y="252" font-size="10.5" fill="#0a3a1e" font-weight="700">落在"两者差距均大"</text>
+        <text x="605" y="266" font-size="10.5" fill="#0a3a1e">信息层可先切入，不等基建</text>
+      </g>
       <circle cx="512" cy="328" r="13" fill="#a82a0a" fill-opacity=".8" stroke="#4a1008" stroke-width="2"/>
       <text x="512" y="332" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">巴西</text>
       <circle cx="546" cy="395" r="13" fill="#a82a0a" fill-opacity=".8" stroke="#4a1008" stroke-width="2"/>
@@ -480,11 +693,11 @@ body {
   </div>
 
   <div class="insight">
-    <strong>结论：</strong>严格说越南落在"两者差距均大"象限——信息层和基础设施差距同量级（-0.5 vs -0.6），<strong>不是纯"信息层为主"</strong>。但信息层可先行切入，不等基础设施改善。更稳的是<strong>排除信号</strong>：巴西、印尼、墨西哥基础设施差距显著大于信息层，与 B2B 供应链软件的能力边界不匹配。
+    <strong>结论：</strong>越南严格落在"两者差距均大"象限——信息层和基础设施差距同量级（-0.5 vs -0.6），<strong>不是纯"信息层为主"</strong>。但信息层可先行切入（软件可覆盖），不必等基础设施改善。更稳的是<strong>排除信号</strong>：巴西、印尼、墨西哥基础设施差距显著大于信息层，与 B2B 供应链软件的能力边界不匹配。
   </div>
 </div>
 
-<div class="section">
+<div class="section" id="sec-layer-3">
   <div class="filter-step">
     <div class="step-num">3</div>
     <div>
@@ -612,11 +825,11 @@ body {
   </div>
 
   <div class="insight">
-    <strong>第 3 层综合：</strong>三个独立维度同时强的<strong>唯一市场是越南</strong>。印度云计算拐点强但制造业底盘薄（13%）；沙特云拐点强但制造业非常薄；巴西三个维度都弱。
+    <strong>第 3 层综合：</strong>三个维度<strong>同时够用且互相匹配</strong>的市场是越南（制造业占比深 + 高增速、云计算高增速、可验证的数字化拐点）。印度云计算拐点强、制造业绝对体量全球第五大，但占比偏低且以本土企业为主（Reliance/Adani/Tata），顺丰科技可切入的客户面有限；沙特云拐点强但制造业占比非常薄；巴西三个维度都弱。
   </div>
 </div>
 
-<div class="section">
+<div class="section" id="sec-layer-4">
   <div class="filter-step">
     <div class="step-num">4</div>
     <div>
@@ -720,7 +933,7 @@ body {
   </div>
 
   <div class="insight amber">
-    <strong>第 4 层结论：</strong>集团资源高度集中在东南亚核心 4 国。越南在此层维持"强"。<strong>越南 = 四层条件同时达标的唯一市场</strong>。
+    <strong>第 4 层结论：</strong>集团资源高度集中在东南亚核心 4 国。越南在此层维持"强"。<strong>越南 = 四层条件同时达标、且内部资源可支撑的市场</strong>。
   </div>
 </div>
 
@@ -785,7 +998,7 @@ body {
   </div>
 </div>
 
-<div class="section">
+<div class="section" id="sec-kenya">
   <div class="filter-step B">
     <div class="step-num">K</div>
     <div>
@@ -881,7 +1094,7 @@ body {
 
 <hr class="divider">
 
-<div class="section">
+<div class="section" id="sec-recommend">
   <p class="sec-label">综合结论</p>
   <h2 class="sec-title">两条推荐路径</h2>
 
@@ -891,9 +1104,9 @@ body {
         <span class="rec-badge">路径 1</span>
         <span class="rec-country">越南</span>
       </div>
-      <div class="rec-type">综合市场效率差套利 · 主攻</div>
+      <div class="rec-type">综合市场能力溢出套利 · 主攻</div>
       <div class="rec-thesis">
-        <em>中国产业外溢 + 中国供应链能力</em>两股力量正在越南交汇。2024 年中国对越 FDI 达 <strong>47.3 亿美元</strong>（越方口径），BOE、立讯、歌尔等 Apple/Samsung 供应商自 2018 年起扩张当地产能；三星在越南出口额约 <strong>550 亿美元</strong>，占越南电子出口近一半。同期极兔、菜鸟、京东物流等已在东南亚完成规模验证。本报告四层筛选中越南是<strong>三条件同时达标的唯一市场</strong>——当中国制造客户、中国物流基础设施、本地数字化拐点首次在一个国家汇合，窗口是现在。
+        <em>中国产业外溢 + 中国供应链能力</em>两股力量正在越南交汇。2024 年中国对越 FDI 达 <strong>47.3 亿美元</strong>（越方口径），BOE、立讯、歌尔等 Apple/Samsung 供应商自 2018 年起扩张当地产能；三星在越南出口额约 <strong>550 亿美元</strong>，占越南电子出口近一半。同期极兔、菜鸟、京东物流等已在东南亚完成规模验证。本报告四层筛选中越南是<strong>三条件同时达标、且内部资源可支撑的市场</strong>——当中国制造客户、中国物流基础设施、本地数字化拐点在一个国家汇合，窗口是现在。
       </div>
     </div>
 
@@ -904,7 +1117,7 @@ body {
       </div>
       <div class="rec-type">出口农业冷链 · 方法论示范</div>
       <div class="rec-thesis">
-        <em>付费方在海外、问题在本地</em>的垂直机会。肯尼亚玫瑰供应欧盟市场约 <strong>40%</strong>，花卉采摘到出港 48 小时窗口对温控和追溯有刚性需求；本地冷链基础设施被 Efficiency for Access 报告定性为"vastly underdeveloped"，仅 <strong>15%</strong> 小农户可接入正规冷储。中国在生鲜冷链数字化（IoT 传感、温控监管、B2B 撮合）已有成熟产品链，可直接输出给肯尼亚大型出口商和欧盟采购商。<strong>独立产品、独立组织</strong>，不与路径 1 共用资源。
+        <em>付费方在海外、问题在本地</em>的垂直机会。肯尼亚玫瑰供应欧盟市场约 <strong>40%</strong>，付费方是欧盟大型采购商和 Oserian、Sian Roses 等大型出口商——他们<strong>已有自建冷库</strong>，真正卡脖子的是<strong>产地到内罗毕机场这最后一段</strong>：48 小时温控窗口下，多种植园拼车、路面运输温控、货量与航班舱位匹配、全链可追溯给欧盟买方——这是纯<strong>调度和信息层问题</strong>，恰好落在软件可覆盖的范围。中国在生鲜冷链数字化（IoT 温控、B2B 撮合、履约可视化）已有成熟产品链，可直接输出。<strong>独立产品、独立组织</strong>，不与路径 1 共用资源。
       </div>
     </div>
   </div>
@@ -921,7 +1134,7 @@ body {
     </div>
     <div class="sub-rec wait">
       <div class="sub-rec-head"><span class="sub-rec-title">印度</span><span class="sub-rec-tag">需进一步论证</span></div>
-      <div class="sub-rec-body">第 1 层效率差已修正（8.9%），制造业底盘薄（13%），本地竞争激烈（Delhivery 等）。<strong>优先级低于印尼</strong>。</div>
+      <div class="sub-rec-body">第 1 层效率差已修正（8.9%）。制造业绝对体量全球前列但占比偏低、且以本土集团为主，顺丰科技可切入的客户面有限；本地竞争激烈（Delhivery 等）。<strong>优先级低于印尼</strong>。</div>
     </div>
     <div class="sub-rec wait">
       <div class="sub-rec-head"><span class="sub-rec-title">菲律宾</span><span class="sub-rec-tag">需进一步论证</span></div>
@@ -952,19 +1165,24 @@ body {
 
 <hr class="divider">
 
-<div class="section">
+<div class="section" id="sec-weaknesses">
   <p class="sec-label">逻辑自检</p>
-  <h2 class="sec-title">已知的推导弱点</h2>
-  <p class="sec-body">诚实披露本报告未完全闭合的逻辑和数据局限：</p>
+  <h2 class="sec-title collapse-head" data-collapse-target="weak-body">
+    <span class="collapse-caret" aria-hidden="true">▸</span>
+    <span>已知的推导弱点</span>
+    <span class="collapse-count">6 项</span>
+  </h2>
+  <p class="sec-body">诚实披露本报告未完全闭合的逻辑和数据局限：<span class="collapse-hint">（点击标题展开）</span></p>
 
+  <div class="collapse-body" id="weak-body" hidden>
   <div class="insight gray">
     <strong>弱点 1 · 物流成本/GDP 精度有限：</strong>仅中国（发改委 14.4%）和印度（NCAER 2024 8.9%）有官方数据。其他国为多源区间估算，精度差异大。
   </div>
   <div class="insight gray">
-    <strong>弱点 2 · 越南"信息层为主"证据不严谨：</strong>LPI 子维度显示越南信息层和基础设施差距同量级。真正支撑推荐的是第 3-4 层。
+    <strong>弱点 2 · 越南第 2 层单看不够强：</strong>LPI 子维度显示越南信息层和基础设施差距同量级，第 2 层仅排除拉美（基建主导），未单独锁定越南。真正支撑越南推荐的是第 3-4 层（制造业外溢 + 集团资源）。
   </div>
   <div class="insight gray">
-    <strong>弱点 3 · "效率差套利"命名有偏差：</strong>中国 LPI 3.7 ≈ 美国 3.8，与发达国家差距不大。中国方案核心优势是<strong>成本</strong>而非<strong>效率</strong>。
+    <strong>弱点 3 · 命名口径需澄清：</strong>中国 LPI 3.7 ≈ 美国 3.8，中国物流效率并非全球领先。本框架所谓"能力溢出套利"指的是中国已在本土摊销研发与组织成本，<strong>用成本优势输出到效率洼地</strong>——核心机制是<strong>成本结构</strong>而非<strong>效率领先</strong>。
   </div>
   <div class="insight gray">
     <strong>弱点 4 · 肯尼亚"数字化可解损耗占比"是估算：</strong>无严格量化来源。实际可能在 10-30% 区间。
@@ -974,6 +1192,7 @@ body {
   </div>
   <div class="insight gray">
     <strong>弱点 6 · 集团资源布局为外部评估：</strong>Harvey ball 打分依据公开年报方向性描述，<strong>非分子公司精确 KPI。集团内部数据可进一步精化此层判断。</strong>
+  </div>
   </div>
 </div>
 
@@ -998,8 +1217,6 @@ body {
     var pane = document.getElementById('pane-'+tab);
     if (btn) btn.classList.add('active');
     if (pane) pane.classList.add('active');
-    // After layout reflow, align page so that the tabs bar sits at the top
-    // regardless of previous scroll / sticky state / pane height differences
     requestAnimationFrame(function(){
       var wrap = document.querySelector('.tabs-wrap');
       if (!wrap) return;
@@ -1007,6 +1224,356 @@ body {
       window.scrollTo({ top: y, behavior: 'smooth' });
     });
   };
+
+  /* ---------- Editable mode ---------- */
+  // Text-bearing selectors. SVG text / charts are excluded on purpose.
+  var EDITABLE_SELECTOR = [
+    'h1','h2','h3','h4','h5',
+    'p','li','td','th','caption','figcaption','blockquote',
+    '.sec-label','.sec-body','.step-text','.step-sub',
+    '.mk-action','.mk-subtitle','.mk-source',
+    '.insight','.fw-h','.fw-desc','.fw-col-title','.fw-col-sub',
+    '.rec-type','.rec-thesis','.rec-country','.rec-badge',
+    '.sub-rec-label','.sub-rec-body',
+    '.hbar-label','.hbar-val',
+    '.hero-eyebrow','.hero-sub','.hero-verdict',
+    '.global-note','.tab-btn',
+    '.lg-item','.lg-note','.lg-title',
+    '.type-card-label','.type-card-title','.type-card-body',
+    '.conclusion-box','.conclusion-title','.conclusion-body'
+  ].join(',');
+
+  var editToggle = document.getElementById('edit-toggle');
+  var editOn = false;
+  function setEditable(on) {
+    editOn = on;
+    document.body.classList.toggle('editing', on);
+    document.querySelectorAll(EDITABLE_SELECTOR).forEach(function(el){
+      // Skip nodes inside chart modals (avoid dup editing on clones)
+      if (el.closest('.chart-modal-body')) return;
+      if (on) {
+        el.setAttribute('contenteditable', 'true');
+        el.setAttribute('spellcheck', 'false');
+      } else {
+        el.removeAttribute('contenteditable');
+        el.removeAttribute('spellcheck');
+      }
+    });
+    editToggle.classList.toggle('active', on);
+    editToggle.textContent = on ? '退出编辑' : '编辑模式';
+  }
+  editToggle.addEventListener('click', function(){ setEditable(!editOn); });
+
+  // While editing, block Tab-button clicks from switching tabs (let user edit the label)
+  document.addEventListener('click', function(e){
+    if (!editOn) return;
+    var tb = e.target.closest('.tab-btn');
+    if (tb) { e.stopPropagation(); e.preventDefault(); }
+  }, true);
+
+  /* ---------- Chart zoom ---------- */
+  var modal = document.getElementById('chart-modal');
+  var modalBody = modal.querySelector('.chart-modal-body');
+  var modalClose = modal.querySelector('.cm-close');
+
+  function openChartModal(chartEl) {
+    modalBody.innerHTML = '';
+    var clone = chartEl.cloneNode(true);
+    // Strip any contenteditable + zoom btn from the clone
+    clone.querySelectorAll('[contenteditable]').forEach(function(n){ n.removeAttribute('contenteditable'); n.removeAttribute('spellcheck'); });
+    var zb = clone.querySelector('.zoom-btn'); if (zb) zb.remove();
+    modalBody.appendChild(clone);
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // Start scrolled to the left so the chart origin is visible
+    modalBody.scrollLeft = 0;
+  }
+  function closeChartModal() {
+    modal.classList.remove('open');
+    modalBody.innerHTML = '';
+    document.body.style.overflow = '';
+  }
+  modalClose.addEventListener('click', closeChartModal);
+  modal.addEventListener('click', function(e){ if (e.target === modal) closeChartModal(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && modal.classList.contains('open')) closeChartModal(); });
+
+  document.querySelectorAll('.mk-chart').forEach(function(chart){
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'zoom-btn';
+    btn.setAttribute('aria-label', '放大查看');
+    btn.innerHTML = '<span style="font-size:14px;line-height:1;">⤢</span><span>放大</span>';
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (editOn) return;  // don't zoom while editing
+      openChartModal(chart);
+    });
+    chart.appendChild(btn);
+  });
+
+  /* ---------- Export current HTML (preserves edits) ---------- */
+  document.getElementById('export-html').addEventListener('click', function(){
+    // Turn off edit mode before serializing so exported HTML is clean
+    var wasEditing = editOn;
+    if (wasEditing) setEditable(false);
+    // Remove toolbar + modal from the exported snapshot
+    var doc = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    doc = doc.replace(/<div class="toolbar"[\s\S]*?<\/div>\s*<div id="chart-modal"[\s\S]*?<\/div>\s*<\/div>/, '');
+    // Simpler: re-serialize with nodes cloned & stripped
+    var htmlEl = document.documentElement.cloneNode(true);
+    var tb = htmlEl.querySelector('.toolbar'); if (tb) tb.remove();
+    var mm = htmlEl.querySelector('#chart-modal'); if (mm) mm.remove();
+    htmlEl.querySelectorAll('.zoom-btn').forEach(function(n){ n.remove(); });
+    doc = '<!DOCTYPE html>\n' + htmlEl.outerHTML;
+    var blob = new Blob([doc], { type: 'text/html;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'index-edited.html';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    if (wasEditing) setEditable(true);
+  });
+
+  /* ---------- Table of Contents ---------- */
+  var tocToggle = document.getElementById('toc-toggle');
+  var tocDrawer = document.getElementById('toc-drawer');
+  var tocOverlay = document.getElementById('toc-overlay');
+  var tocClose = tocDrawer.querySelector('.toc-close');
+  var tocItems = Array.prototype.slice.call(tocDrawer.querySelectorAll('.toc-item'));
+
+  function openToc() { tocDrawer.classList.add('open'); tocOverlay.classList.add('open'); }
+  function closeToc() { tocDrawer.classList.remove('open'); tocOverlay.classList.remove('open'); }
+  tocToggle.addEventListener('click', openToc);
+  tocClose.addEventListener('click', closeToc);
+  tocOverlay.addEventListener('click', closeToc);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && tocDrawer.classList.contains('open')) closeToc();
+  });
+
+  function scrollToSection(id, tab) {
+    var target = document.getElementById(id);
+    if (!target) return;
+    // If section lives inside a tab pane, switch to it first
+    if (tab) {
+      var currentBtn = document.querySelector('.tab-btn.active');
+      if (!currentBtn || currentBtn.getAttribute('data-tab') !== tab) {
+        document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+        document.querySelectorAll('.tab-pane').forEach(function(p){ p.classList.remove('active'); });
+        var btn = document.querySelector('.tab-btn[data-tab="'+tab+'"]');
+        var pane = document.getElementById('pane-'+tab);
+        if (btn) btn.classList.add('active');
+        if (pane) pane.classList.add('active');
+      }
+    }
+    // wait two frames for layout, then scroll
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        var y = getDocOffsetTop(target) - 12;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      });
+    });
+  }
+
+  tocItems.forEach(function(item){
+    item.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = item.getAttribute('data-target');
+      var tab = item.getAttribute('data-tab');
+      closeToc();
+      scrollToSection(id, tab);
+    });
+  });
+
+  // Scroll-spy: highlight active TOC item
+  var sectionMap = tocItems.map(function(it){
+    return { id: it.getAttribute('data-target'), tab: it.getAttribute('data-tab'), item: it };
+  });
+  function updateActiveToc() {
+    var viewY = window.scrollY + window.innerHeight * 0.25;
+    var activeIdx = 0;
+    for (var i = 0; i < sectionMap.length; i++) {
+      var el = document.getElementById(sectionMap[i].id);
+      if (!el) continue;
+      // Skip sections in inactive tab panes
+      var pane = el.closest('.tab-pane');
+      if (pane && !pane.classList.contains('active')) continue;
+      var top = getDocOffsetTop(el);
+      if (top <= viewY) activeIdx = i;
+    }
+    tocItems.forEach(function(it, i){ it.classList.toggle('active', i === activeIdx); });
+  }
+  var spyTicking = false;
+  window.addEventListener('scroll', function(){
+    if (!spyTicking) {
+      requestAnimationFrame(function(){ updateActiveToc(); spyTicking = false; });
+      spyTicking = true;
+    }
+  }, { passive: true });
+  updateActiveToc();
+
+  /* ---------- Collapsible sections ---------- */
+  document.querySelectorAll('.collapse-head').forEach(function(head){
+    var targetId = head.getAttribute('data-collapse-target');
+    var body = document.getElementById(targetId);
+    if (!body) return;
+    head.addEventListener('click', function(){
+      var isOpen = !body.hasAttribute('hidden');
+      if (isOpen) { body.setAttribute('hidden', ''); head.classList.remove('open'); }
+      else { body.removeAttribute('hidden'); head.classList.add('open'); }
+    });
+  });
+
+  /* ---------- Scatter bubble tooltips ---------- */
+  // Raw data per country per chart (index 0/1/2 maps to scatter 1/2/3)
+  // chart 0: efficiency-gap (logistics cost% / LPI)
+  // chart 1: gap-root-cause (info-layer vs infra gap vs China)
+  // chart 2: manufacturing base & growth
+  var TT_DATA = {
+    0: { // Chart 1
+      '中国':   { rows: [['物流成本 / GDP','14.4%'], ['LPI 总分','3.7']], note: '基准线：发改委官方数据' },
+      '越南':   { rows: [['物流成本 / GDP','16-20%'], ['LPI 总分','3.3']], note: 'VLA 估算，洼地信号最明显' },
+      '印度':   { rows: [['物流成本 / GDP','8.9%（修正）'], ['LPI 总分','3.4']], note: 'NCAER / DPIIT 2024。从洼地滑出，信号矛盾' },
+      '印尼':   { rows: [['物流成本 / GDP','≈23%'], ['LPI 总分','3.0']], note: '成本高但基础设施短板主导' },
+      '巴西':   { rows: [['物流成本 / GDP','≈12-13%'], ['LPI 总分','3.2']], note: 'IPEA 估算' },
+      '泰国':   { rows: [['物流成本 / GDP','≈13-14%'], ['LPI 总分','3.5']], note: '效率已接近中国水平' },
+      '马来':   { rows: [['物流成本 / GDP','≈13%'], ['LPI 总分','3.6']], note: '小体量 + 高效率，套利空间薄' },
+      '沙特':   { rows: [['物流成本 / GDP','≈14%'], ['LPI 总分','3.4']], note: '效率洼地偏小' },
+      '墨西哥': { rows: [['物流成本 / GDP','≈12-15%'], ['LPI 总分','3.1']], note: '成本高，但根因在基建' },
+      '菲律宾': { rows: [['物流成本 / GDP','数据缺失'], ['LPI 总分','3.0']], note: '样本外，虚线示意' },
+      '肯尼亚': { rows: [['物流成本 / GDP','数据缺失'], ['LPI 总分','≈2.8']], note: '样本外，作为路径 2 候选' },
+      '尼日利亚': { rows: [['物流成本 / GDP','数据缺失'], ['LPI 总分','≈2.6']], note: '样本外，路径 2 对照' }
+    },
+    1: { // Chart 2
+      '中国':   { rows: [['信息层差距','0（基准）'], ['基础设施差距','0（基准）']], note: '原点 = 中国水平' },
+      '越南':   { rows: [['信息层差距','-0.5'], ['基础设施差距','-0.6']], note: '两类差距同量级，信息层可先切入' },
+      '印度':   { rows: [['信息层差距','-0.4'], ['基础设施差距','-0.7']], note: '软件可覆盖面偏窄' },
+      '印尼':   { rows: [['信息层差距','-0.8'], ['基础设施差距','-0.9']], note: '基建主导缺口，超出软件能力边界' },
+      '巴西':   { rows: [['信息层差距','-0.65'], ['基础设施差距','-0.8']], note: '基建主导，排除信号' },
+      '墨西哥': { rows: [['信息层差距','-0.7'], ['基础设施差距','-1.0']], note: '基建差距最显著' },
+      '沙特':   { rows: [['信息层差距','-0.45'], ['基础设施差距','-0.4']], note: '两者都小，套利空间有限' },
+      '泰国':   { rows: [['信息层差距','-0.3'], ['基础设施差距','-0.5']], note: '整体差距均小' },
+      '马来':   { rows: [['信息层差距','-0.15'], ['基础设施差距','-0.4']], note: '逼近中国水平' },
+      '菲律宾': { rows: [['信息层差距','-0.55'], ['基础设施差距','-0.6']], note: '两类同量级，样本参考' }
+    },
+    2: { // Chart 3
+      '中国':   { rows: [['制造业 / GDP','≈27%'], ['5 年平均增速','≈6%']], note: '基准：全球制造业体量第一' },
+      '越南':   { rows: [['制造业 / GDP','≈24%'], ['5 年平均增速','≈9%']], note: '占比深 + 高增速，样本中唯一兼得' },
+      '印度':   { rows: [['制造业 / GDP','≈13%'], ['5 年平均增速','≈5%']], note: '占比偏低但绝对体量全球前五，客户以本土集团为主' },
+      '印尼':   { rows: [['制造业 / GDP','≈19%'], ['5 年平均增速','≈4%']], note: '体量中等，增速温和' },
+      '泰国':   { rows: [['制造业 / GDP','≈25%'], ['5 年平均增速','≈-1%']], note: '占比深但处于停滞/下滑' },
+      '马来':   { rows: [['制造业 / GDP','≈22%'], ['5 年平均增速','≈0%']], note: '增长乏力' },
+      '墨西哥': { rows: [['制造业 / GDP','≈18%'], ['5 年平均增速','≈-1%']], note: 'Nearshore 叙事未转化为增速' },
+      '菲律宾': { rows: [['制造业 / GDP','≈17%'], ['5 年平均增速','≈3%']], note: '底盘一般' },
+      '沙特':   { rows: [['制造业 / GDP','≈12%（非石油）'], ['5 年平均增速','≈3%']], note: '非石油口径，体量小' },
+      '巴西':   { rows: [['制造业 / GDP','≈10%'], ['5 年平均增速','≈-1%']], note: '三个维度皆弱' },
+      '尼日利亚': { rows: [['制造业 / GDP','≈12%'], ['5 年平均增速','≈-2%']], note: '制造业萎缩' },
+      '肯尼亚': { rows: [['制造业 / GDP','≈7%'], ['5 年平均增速','≈3%']], note: '路径 2：不依赖制造业底盘' }
+    }
+  };
+
+  var tooltipEl = document.getElementById('chart-tooltip');
+  var activeHit = null;
+
+  function positionTooltip(clientX, clientY) {
+    var pad = 14;
+    var tw = tooltipEl.offsetWidth;
+    var th = tooltipEl.offsetHeight;
+    var x = clientX + pad;
+    var y = clientY + pad;
+    if (x + tw + 8 > window.innerWidth) x = clientX - tw - pad;
+    if (y + th + 8 > window.innerHeight) y = clientY - th - pad;
+    if (x < 4) x = 4;
+    if (y < 4) y = 4;
+    tooltipEl.style.left = x + 'px';
+    tooltipEl.style.top = y + 'px';
+  }
+
+  function showTooltip(data, country, chartIdx, clientX, clientY) {
+    if (!data) return;
+    var tag = chartIdx === 0 ? '效率差' : chartIdx === 1 ? '差距根因' : '制造业底盘';
+    var html = '<div class="tt-country">' + country + '<span class="tt-badge">' + tag + '</span></div>';
+    data.rows.forEach(function(r){
+      html += '<div class="tt-row"><span class="tt-k">' + r[0] + '</span><span class="tt-v">' + r[1] + '</span></div>';
+    });
+    if (data.note) html += '<div class="tt-note">' + data.note + '</div>';
+    tooltipEl.innerHTML = html;
+    tooltipEl.classList.add('visible');
+    positionTooltip(clientX, clientY);
+  }
+  function hideTooltip() {
+    tooltipEl.classList.remove('visible');
+    activeHit = null;
+  }
+
+  // For each scatter-svg, find circles and match with the text that follows (country name).
+  document.querySelectorAll('.scatter-svg').forEach(function(svg, chartIdx){
+    var children = Array.prototype.slice.call(svg.children);
+    // Flatten: also consider children inside <g>
+    var flat = [];
+    function walk(node) {
+      Array.prototype.slice.call(node.children).forEach(function(c){
+        if (c.tagName === 'circle' || c.tagName === 'text') flat.push(c);
+        else if (c.tagName === 'g') walk(c);
+      });
+    }
+    walk(svg);
+    for (var i = 0; i < flat.length; i++) {
+      if (flat[i].tagName !== 'circle') continue;
+      var circle = flat[i];
+      // find next text sibling
+      var country = null;
+      for (var j = i + 1; j < flat.length && j < i + 3; j++) {
+        if (flat[j].tagName === 'text') {
+          var t = (flat[j].textContent || '').trim();
+          if (t && t.length <= 6 && !/^[\d\-\.%]+$/.test(t)) { country = t; break; }
+        }
+      }
+      if (!country) continue;
+      if (!TT_DATA[chartIdx] || !TT_DATA[chartIdx][country]) continue;
+      circle.classList.add('bubble-hit');
+      circle.setAttribute('data-country', country);
+      circle.setAttribute('data-chart', chartIdx);
+    }
+  });
+
+  document.addEventListener('mouseover', function(e){
+    var c = e.target.closest && e.target.closest('circle.bubble-hit');
+    if (!c) return;
+    if (editOn) return;
+    var country = c.getAttribute('data-country');
+    var chartIdx = parseInt(c.getAttribute('data-chart'), 10);
+    var d = TT_DATA[chartIdx] && TT_DATA[chartIdx][country];
+    activeHit = c;
+    showTooltip(d, country, chartIdx, e.clientX, e.clientY);
+  });
+  document.addEventListener('mousemove', function(e){
+    if (!tooltipEl.classList.contains('visible')) return;
+    positionTooltip(e.clientX, e.clientY);
+  });
+  document.addEventListener('mouseout', function(e){
+    var c = e.target.closest && e.target.closest('circle.bubble-hit');
+    if (!c) return;
+    hideTooltip();
+  });
+  // Touch (mobile): tap bubble toggles tooltip; tap elsewhere hides
+  document.addEventListener('touchstart', function(e){
+    var c = e.target.closest && e.target.closest('circle.bubble-hit');
+    if (c) {
+      if (editOn) return;
+      e.preventDefault();
+      var t = e.touches[0];
+      if (activeHit === c) { hideTooltip(); return; }
+      activeHit = c;
+      var country = c.getAttribute('data-country');
+      var chartIdx = parseInt(c.getAttribute('data-chart'), 10);
+      var d = TT_DATA[chartIdx] && TT_DATA[chartIdx][country];
+      showTooltip(d, country, chartIdx, t.clientX, t.clientY);
+    } else if (tooltipEl.classList.contains('visible')) {
+      hideTooltip();
+    }
+  }, { passive: false });
+
 })();
 </script>
 </body></html>
