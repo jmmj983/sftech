@@ -1,222 +1,357 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>物流科技出海：能力溢出套利框架与市场选择</title>
+<title>物流科技出海 · 能力溢出套利（Light）</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body {
-  font-family: -apple-system, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
-  background: #f5f2ec;
-  color: #14140f;
-  font-size: 17px;
-  line-height: 1.65;
+  font-family: "IBM Plex Sans", "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  background: #f6f7fb;
+  color: #222831;
+  font-size: 15.5px;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
-.page { max-width: 860px; margin: 0 auto; padding: 0 0 60px; }
+:root {
+  --ink: #1a1d24;
+  --ink-2: #4a5160;
+  --mute: #8a8f99;
+  --line: #eceef2;
+  --line-2: #f3f4f7;
+  --surface: #ffffff;
+  --surface-2: #f7f8fb;
+  --accent: #1f3b6d;            /* bcg navy */
+  --accent-soft: #e6edf6;
+  --accent-ink: var(--accent-ink);
+  --path-a: #1f3b6d;            /* Attractiveness */
+  --path-a-soft: #e5ecf5;
+  --path-b: #506680;            /* Feasibility */
+  --path-b-soft: #edf1f5;
+  --path-b-ink: #39495c;
+  --neutral: #5e6b80;
+  --shadow-xs: 0 1px 2px rgba(20,20,25,.04);
+  --shadow-sm: 0 4px 14px rgba(20,20,25,.04);
+  --shadow-md: 0 10px 28px rgba(20,20,25,.05);
+}
+.page { max-width: 880px; margin: 0 auto; padding: 0 0 60px; }
 
-.hero { background: #14140f; color: #f4f0e6; padding: 52px 28px 44px; }
-.hero-eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #a8a090; margin-bottom: 14px; font-weight: 600; }
-.hero-title { font-size: 30px; font-weight: 700; line-height: 1.25; margin-bottom: 20px; color: #f4f0e6; }
-.hero-title em { font-style: normal; color: #d4b86e; }
-.hero-sub { font-size: 16px; color: #d4cfc0; line-height: 1.7; }
-.hero-verdict { margin-top: 22px; padding: 16px 18px; background: rgba(212,184,110,.12); border-left: 4px solid #d4b86e; border-radius: 0 8px 8px 0; font-size: 15.5px; color: #f4f0e6; line-height: 1.7; }
-.hero-verdict strong { color: #d4b86e; font-weight: 700; }
+.hero {
+  background: linear-gradient(180deg, #ffffff 0%, #f6f7fb 100%);
+  color: var(--ink); padding: 52px 28px 32px; position: relative; overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+.hero::before {
+  content: ''; position: absolute; left: 28px; top: 44px; width: 36px; height: 3px;
+  background: var(--accent); border-radius: 2px;
+}
+.hero::after { display: none; }
+.hero-eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; font-weight: 700; padding-top: 14px; }
+.hero-title { font-size: 30px; font-weight: 700; line-height: 1.22; margin-bottom: 12px; color: var(--ink); letter-spacing: -.01em; }
+.hero-title em { font-style: normal; color: var(--accent); }
+.hero-title br { display: none; }
+@media (min-width: 720px) { .hero-title br { display: inline; } }
+.hero-sub { font-size: 14.5px; color: var(--ink-2); line-height: 1.7; max-width: 760px; }
+.hero-sub strong { color: var(--ink) !important; font-weight: 600; }
+.hero-verdict {
+  margin-top: 18px; padding: 14px 16px;
+  background: var(--surface-2); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+  border-radius: 8px; font-size: 14.5px; color: var(--ink); line-height: 1.7;
+}
+.hero-verdict strong { color: var(--accent-ink); font-weight: 700; }
 
-.section { padding: 44px 28px 0; }
-.sec-label { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #6a6458; margin-bottom: 10px; font-weight: 700; }
-.sec-title { font-size: 26px; font-weight: 700; color: #14140f; margin-bottom: 14px; line-height: 1.3; }
-.sec-body { font-size: 16px; color: #2a2a26; line-height: 1.75; margin-bottom: 20px; }
-.divider { border: none; border-top: 1px solid #c8c0b0; margin: 48px 28px 0; }
+
+
+.section { padding: 40px 28px 0; }
+.sec-label { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; font-weight: 700; }
+.sec-title { font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 10px; line-height: 1.3; letter-spacing: -.01em; }
+.sec-body { font-size: 14.5px; color: var(--ink-2); line-height: 1.7; margin-bottom: 16px; }
+.sec-body strong { color: var(--ink); font-weight: 600; }
+.divider { border: none; border-top: 1px solid var(--line); margin: 40px 28px 0; }
 
 .fw-box { margin: 24px 0 10px; }
 
-.global-note { margin: 0 28px; padding: 14px 18px; background: #fcf1de; border: 1px dashed #8a4f15; border-radius: 10px; font-size: 13.5px; color: #4a2a10; line-height: 1.7; margin-top: 18px; }
-.global-note strong { color: #8a4f15; font-weight: 700; }
+/* Inline "learn more" expansion */
+.inline-more {
+  background: transparent; border: 0; padding: 0;
+  font-family: inherit; font-size: inherit; cursor: pointer;
+  color: var(--accent); font-weight: 600;
+  border-bottom: 1px dashed currentColor;
+}
+.inline-more:hover { color: var(--accent-ink); }
+.inline-more::after { content: ' ›'; font-weight: 600; }
+.inline-more.is-open::after { content: ' ‹'; }
+.inline-expand {
+  margin: 10px 0 4px; padding: 12px 14px;
+  background: var(--surface-2); border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  font-size: 14px; color: var(--ink-2); line-height: 1.7;
+}
+.inline-expand strong { color: var(--ink); }
 
-.fw-wrap { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; align-items: stretch; }
+/* Compact formula banner — light edition */
+.fw-formula {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px;
+  padding: 14px 16px; margin-bottom: 14px;
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.fw-formula .ff-eq { font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--accent); text-transform: uppercase; }
+.fw-formula .ff-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 11px; border-radius: 999px;
+  background: #fff; border: 1px solid var(--line);
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  box-shadow: var(--shadow-xs);
+}
+.fw-formula .ff-pill .ff-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent); font-size: 11px; font-weight: 800;
+}
+.fw-formula .ff-x { font-size: 15px; color: var(--mute); font-weight: 500; }
+
+.global-note { margin: 16px 28px 0; padding: 11px 14px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; font-size: 13.5px; color: var(--ink-2); line-height: 1.65; box-shadow: none; }
+.global-note strong { color: var(--ink); font-weight: 600; }
+.global-note::before { content: '阅读提示'; display: inline-block; margin-right: 10px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+
+.fw-wrap { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 14px; align-items: stretch; }
 @media (min-width: 760px) { .fw-wrap { grid-template-columns: minmax(0, 2fr) auto minmax(0, 1fr); gap: 14px; } }
-.fw-col { border-radius: 14px; padding: 16px 14px 14px; display: flex; flex-direction: column; position: relative; }
-.fw-col.fw-attr { background: #f0f5f1; border: 2px solid #0a3a1e; }
-.fw-col.fw-feas { background: #fbf2e6; border: 2px solid #4a2a10; }
+.fw-col { border-radius: 12px; padding: 16px 14px 14px; display: flex; flex-direction: column; position: relative; background: #fff; border: 1px solid var(--line); }
+.fw-col.fw-attr { border-top: 3px solid var(--path-a); }
+.fw-col.fw-feas { border-top: 3px solid var(--path-b); }
 .fw-col-head { margin-bottom: 12px; }
-.fw-col-label { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .08em; padding: 4px 10px; border-radius: 10px; margin-bottom: 6px; }
-.fw-col.fw-attr .fw-col-label { background: #0a3a1e; color: #d4b86e; }
-.fw-col.fw-feas .fw-col-label { background: #4a2a10; color: #d4b86e; }
-.fw-col-title { font-size: 15px; font-weight: 700; color: #14140f; line-height: 1.35; }
-.fw-col-sub { font-size: 12px; color: #4a4540; margin-top: 2px; line-height: 1.5; }
+.fw-col-label { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .08em; padding: 3px 9px; border-radius: 6px; margin-bottom: 6px; }
+.fw-col.fw-attr .fw-col-label { background: var(--path-a-soft); color: var(--path-a); }
+.fw-col.fw-feas .fw-col-label { background: var(--path-b-soft); color: var(--path-b-ink); }
+.fw-col-title { font-size: 15.5px; font-weight: 700; color: var(--ink); line-height: 1.35; }
+.fw-col-sub { font-size: 13px; color: var(--mute); margin-top: 3px; line-height: 1.55; }
 .fw-cards-inner { display: grid; grid-template-columns: 1fr; gap: 10px; flex: 1; }
 @media (min-width: 760px) { .fw-attr .fw-cards-inner.two { grid-template-columns: 1fr 1fr; gap: 10px; } }
-.fw-x { display: none; font-size: 22px; font-weight: 400; color: #8a8475; align-items: center; justify-content: center; padding: 0 4px; }
+.fw-x { display: none; font-size: 16px; font-weight: 600; color: var(--mute); align-items: center; justify-content: center; padding: 0 4px; text-transform: lowercase; }
 @media (min-width: 760px) { .fw-x { display: flex; } }
-.fw-x-m { display: flex; align-items: center; justify-content: center; padding: 2px 0; font-size: 18px; color: #8a8475; font-weight: 500; letter-spacing: .3em; }
+.fw-x-m {
+  display: flex; align-items: center; justify-content: center;
+  margin: 4px auto; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--surface-2); border: 1px solid var(--line);
+  font-size: 13.5px; color: var(--mute); font-weight: 700;
+  box-shadow: var(--shadow-xs);
+}
 @media (min-width: 760px) { .fw-x-m { display: none; } }
 .fw-eq { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
 @media (min-width: 680px) { .fw-eq { grid-template-columns: 1fr auto 1fr auto 1fr; gap: 12px; align-items: stretch; } }
-.fw-card { background: #fff; border: 2px solid #14140f; border-radius: 12px; padding: 18px 16px 16px; position: relative; display: flex; flex-direction: column; }
-.fw-card .fw-num { position: absolute; top: -11px; left: 14px; background: #d4b86e; color: #14140f; font-size: 11px; font-weight: 800; letter-spacing: .06em; padding: 3px 9px; border-radius: 10px; }
-.fw-card .fw-h { font-size: 16px; font-weight: 700; color: #14140f; margin: 4px 0 6px; line-height: 1.35; }
-.fw-card .fw-d { font-size: 13.5px; color: #2a2a26; line-height: 1.55; margin-bottom: 10px; flex: 1; }
-.fw-card .fw-m { font-size: 12px; color: #6a6458; line-height: 1.5; padding-top: 8px; border-top: 1px solid #e0d8c8; }
-.fw-card .fw-m strong { color: #14140f; font-weight: 700; }
+.fw-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 18px 16px 16px; position: relative; display: flex; flex-direction: column; box-shadow: var(--shadow-xs); }
+.fw-card .fw-num { position: absolute; top: -11px; left: 14px; background: var(--accent); color: var(--ink); font-size: 12px; font-weight: 800; letter-spacing: .06em; padding: 3px 9px; border-radius: 10px; }
+.fw-card .fw-h { font-size: 16px; font-weight: 700; color: var(--ink); margin: 4px 0 6px; line-height: 1.35; }
+.fw-card .fw-d { font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin-bottom: 10px; flex: 1; }
+.fw-card .fw-m { font-size: 13px; color: var(--mute); line-height: 1.55; padding-top: 8px; border-top: 1px solid var(--line); }
+.fw-card .fw-m strong { color: var(--ink); font-weight: 700; }
 .fw-op { display: none; font-size: 24px; font-weight: 400; color: #8a8475; align-items: center; justify-content: center; }
 @media (min-width: 680px) { .fw-op { display: flex; } }
 
-.fw-note { background: #ecebe6; border-left: 4px solid #8a8475; border-radius: 0 8px 8px 0; padding: 13px 16px; font-size: 14px; color: #2a2a26; line-height: 1.65; margin-top: 14px; }
-.fw-note strong { color: #14140f; font-weight: 700; }
+.fw-note { background: var(--surface-2); border-left: 3px solid var(--mute); border-radius: 0 8px 8px 0; padding: 12px 14px; font-size: 13.5px; color: var(--ink-2); line-height: 1.65; margin-top: 12px; }
+.fw-note strong { color: var(--ink); font-weight: 600; }
 
 .types-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 20px; }
 @media (min-width: 680px) { .types-grid { grid-template-columns: 1fr 1fr; gap: 14px; } }
-.type-card { background: #fff; border: 2px solid #14140f; border-radius: 14px; padding: 20px 20px 18px; }
-.type-card.B { border-color: #8a4f15; background: #fdf5ea; }
-.type-badge { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: .08em; background: #14140f; color: #d4b86e; padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; }
-.type-card.B .type-badge { background: #8a4f15; color: #fdf5ea; }
-.type-title { font-size: 17px; font-weight: 700; color: #14140f; margin-bottom: 8px; }
-.type-desc { font-size: 14px; color: #2a2a26; line-height: 1.6; margin-bottom: 10px; }
-.type-meta { font-size: 12.5px; color: #4a4540; line-height: 1.6; padding-top: 8px; border-top: 1px solid #e0d8c8; }
-.type-meta strong { color: #14140f; font-weight: 700; }
+.type-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 20px 20px 18px; box-shadow: var(--shadow-xs); border-top: 3px solid var(--path-a); }
+.type-card.B { border-top-color: var(--path-b); background: #fff; }
+.type-badge { display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; background: var(--path-a); color: #fff; padding: 4px 11px; border-radius: 20px; margin-bottom: 10px; }
+.type-card.B .type-badge { background: var(--path-b); color: #fff; }
+.type-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.type-desc { font-size: 13.5px; color: var(--ink-2); line-height: 1.65; margin-bottom: 8px; }
+.type-meta { font-size: 13px; color: var(--ink-2); line-height: 1.65; padding-top: 8px; border-top: 1px solid var(--line); }
+.type-meta strong { color: var(--ink); font-weight: 600; }
 
-.tabs-wrap { margin: 36px 0 0; padding: 0 28px; position: sticky; top: 0; z-index: 10; background: #f5f2ec; }
-.tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 14px 0 10px; border-bottom: 1px solid #c8c0b0; }
-.tab-btn { background: #ecebe6; border: 2px solid transparent; border-radius: 10px; padding: 12px 14px; font-size: 14.5px; font-weight: 700; color: #4a4540; cursor: pointer; font-family: inherit; line-height: 1.35; text-align: left; transition: all .15s; }
-.tab-btn .tab-eyebrow { font-size: 10.5px; letter-spacing: .1em; font-weight: 700; color: #8a8475; display: block; margin-bottom: 3px; }
-.tab-btn.active { background: #14140f; color: #f4f0e6; border-color: #14140f; }
-.tab-btn.active .tab-eyebrow { color: #d4b86e; }
-.tab-btn.B.active { background: #4a2a10; border-color: #4a2a10; }
+.tabs-wrap { margin: 28px 0 0; padding: 0 28px; position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 0; }
+.tab-btn { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; font-size: 14.5px; font-weight: 600; color: var(--ink-2); cursor: pointer; font-family: inherit; line-height: 1.3; text-align: left; transition: all .15s; }
+.tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+.tab-btn .tab-eyebrow { font-size: 11px; letter-spacing: .1em; font-weight: 700; color: var(--mute); display: block; margin-bottom: 3px; text-transform: uppercase; }
+.tab-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.tab-btn.active .tab-eyebrow { color: rgba(255,255,255,.7); }
+.tab-btn.B.active { background: var(--accent); border-color: var(--accent); }
 
 .tab-pane { display: none; }
 .tab-pane.active { display: block; }
 
-.filter-step { background: #14140f; border-radius: 10px; padding: 14px 18px; margin: 28px 0 18px; display: flex; align-items: center; gap: 14px; }
-.filter-step.B { background: #4a2a10; }
-.step-num { width: 32px; height: 32px; border-radius: 50%; background: #d4b86e; color: #14140f; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.step-text { color: #f4f0e6; font-size: 16px; font-weight: 600; }
-.step-sub { color: #bcb4a0; font-size: 13px; margin-top: 2px; }
+.filter-step { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 20px 0 14px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-xs); }
+.filter-step.B { border-left: 3px solid var(--path-b); }
+.filter-step:not(.B) { border-left: 3px solid var(--path-a); }
+.step-num { width: 30px; height: 30px; border-radius: 50%; background: var(--path-a); color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.filter-step.B .step-num { background: var(--path-b); }
+.step-text { color: var(--ink); font-size: 15px; font-weight: 700; }
+.step-sub { color: var(--mute); font-size: 12.5px; margin-top: 2px; line-height: 1.5; }
 
-.mk-chart { background: #fff; border: 1px solid #c8c0b0; border-radius: 12px; padding: 18px 18px 14px; margin-bottom: 14px; }
-.mk-action { font-size: 16px; font-weight: 700; color: #14140f; line-height: 1.4; margin-bottom: 4px; padding-left: 10px; border-left: 3px solid #d4b86e; }
-.mk-subtitle { font-size: 12.5px; color: #6a6458; margin: 6px 0 14px 13px; line-height: 1.55; }
-.mk-source { margin-top: 10px; padding-top: 9px; border-top: 1px solid #e0d8c8; font-size: 11.5px; color: #6a6458; line-height: 1.55; }
-.mk-source strong { color: #4a4540; }
+.mk-chart { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 18px 18px 14px; margin-bottom: 12px; box-shadow: var(--shadow-xs); }
+.mk-action { font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.42; margin-bottom: 4px; padding-left: 10px; border-left: 3px solid var(--accent); }
+.mk-subtitle { font-size: 12.5px; color: var(--mute); margin: 6px 0 12px 13px; line-height: 1.55; }
+.mk-source { margin-top: 0; padding-top: 0; border-top: 0; font-size: 12.5px; color: var(--mute); line-height: 1.6; }
+.mk-source strong { color: var(--ink-2); }
+.source-wrap { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line-2); }
+.source-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px;
+  color: var(--ink-2); font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+.source-toggle .st-meta { font-size: 11px; color: var(--mute); font-weight: 500; }
+.source-toggle .st-caret { transition: transform .18s ease; color: var(--accent); }
+.source-wrap.open .source-toggle .st-caret { transform: rotate(90deg); }
+.source-body { padding: 10px 2px 0; }
+.source-body > .data-note { padding: 0; }
+.source-body > .mk-source { margin: 0; }
+.source-body[hidden] { display: none; }
 
 .scatter-svg { width: 100%; height: auto; display: block; }
 
-.chart-legend { margin-top: 12px; padding-top: 10px; border-top: 1px solid #e0d8c8; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 11.5px; color: #4a4540; line-height: 1.5; }
-.chart-legend .lg-title { font-weight: 700; color: #14140f; margin-right: 2px; }
+.chart-legend { margin-top: 12px; padding-top: 10px; border-top: 1px solid #e0d8c8; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13px; color: #4a4540; line-height: 1.55; }
+.chart-legend .lg-title { font-weight: 700; color: var(--ink); margin-right: 2px; }
 .chart-legend .lg-item { display: inline-flex; align-items: center; gap: 5px; }
 .chart-legend .lg-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
 .chart-legend .lg-dot.sm { width: 8px; height: 8px; }
 .chart-legend .lg-dot.lg { width: 15px; height: 15px; }
-.chart-legend .lg-sep { color: #c8c0b0; margin: 0 2px; }
-.chart-legend .lg-note { width: 100%; font-size: 11px; color: #6a6458; margin-top: 4px; }
+.chart-legend .lg-sep { color: var(--line); margin: 0 2px; }
+.chart-legend .lg-note { width: 100%; font-size: 12.5px; color: var(--mute); margin-top: 4px; }
 
-.insight { background: #eef5f0; border-left: 4px solid #1d6e48; border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 16px 0; font-size: 14.5px; color: #14140f; line-height: 1.7; }
-.insight strong { font-weight: 700; }
-.insight.amber { background: #fcf1de; border-left-color: #8a4f15; }
-.insight.gray { background: #ecebe6; border-left-color: #6a6458; }
+.insight { background: var(--path-a-soft); border-left: 3px solid var(--path-a); border-radius: 0 8px 8px 0; padding: 13px 16px; margin: 14px 0; font-size: 14.5px; color: var(--ink); line-height: 1.72; }
+.insight strong { font-weight: 600; }
+.insight.amber { background: var(--path-b-soft); border-left-color: var(--path-b); }
+.insight.gray { background: var(--surface-2); border-left-color: var(--mute); }
 
 .hbar-row { display: grid; grid-template-columns: 110px 1fr 88px; gap: 10px; align-items: center; margin-bottom: 7px; font-size: 14px; }
-.hbar-label { text-align: right; color: #1a1a15; font-weight: 500; }
-.hbar-label.hi { font-weight: 700; color: #0a3a1e; }
-.hbar-label.mid { font-weight: 600; color: #4a2a10; }
-.hbar-track { height: 22px; background: #eae4d2; border-radius: 4px; overflow: hidden; }
+.hbar-label { text-align: right; color: var(--ink); font-weight: 500; }
+.hbar-label.hi { font-weight: 700; color: var(--path-a); }
+.hbar-label.mid { font-weight: 600; color: var(--path-b-ink); }
+.hbar-track { height: 20px; background: var(--line-2); border-radius: 4px; overflow: hidden; }
 .hbar-fill { height: 100%; border-radius: 4px; }
-.hbar-val { font-size: 13px; color: #4a4540; font-weight: 500; }
-.hbar-val.hi { color: #0a3a1e; font-weight: 700; }
-.hbar-val.mid { color: #4a2a10; font-weight: 700; }
-.hbar-val.mute { color: #8a8475; font-style: italic; }
-.hbar-row.cn-ref { padding: 4px 0 6px; margin-bottom: 4px; border-bottom: 1px dashed #d91e18; }
-.hbar-row.cn-ref .hbar-label { color: #d91e18; font-weight: 800; }
-.hbar-row.cn-ref .hbar-val { color: #d91e18; font-weight: 800; }
+.hbar-val { font-size: 13.5px; color: var(--ink-2); font-weight: 500; }
+.hbar-val.hi { color: var(--path-a); font-weight: 700; }
+.hbar-val.mid { color: var(--path-b-ink); font-weight: 700; }
+.hbar-val.mute { color: var(--mute); font-style: italic; }
+.hbar-row.cn-ref { padding: 4px 0 6px; margin-bottom: 4px; border-bottom: 1px dashed var(--accent); }
+.hbar-row.cn-ref .hbar-label { color: var(--accent); font-weight: 800; }
+.hbar-row.cn-ref .hbar-val { color: var(--accent); font-weight: 800; }
 
 .hball-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-.hball-table th { font-size: 11.5px; font-weight: 700; color: #4a4540; text-transform: uppercase; letter-spacing: .05em; padding: 8px 6px; text-align: center; border-bottom: 2px solid #c8c0b0; }
+.hball-table th { font-size: 12px; font-weight: 700; color: var(--mute); text-transform: uppercase; letter-spacing: .05em; padding: 9px 6px; text-align: center; border-bottom: 1px solid var(--line); }
 .hball-table th:first-child { text-align: left; padding-left: 12px; }
-.hball-table td { padding: 10px 6px; font-size: 13.5px; color: #1a1a15; border-bottom: 1px solid #e8e2d0; text-align: center; vertical-align: middle; }
+.hball-table td { padding: 11px 6px; font-size: 14px; color: var(--ink); border-bottom: 1px solid var(--line-2); text-align: center; vertical-align: middle; }
 .hball-table td:first-child { text-align: left; font-weight: 600; padding-left: 12px; }
-.hball-table td:last-child { text-align: left; font-size: 12.5px; color: #4a4540; line-height: 1.5; padding-right: 10px; }
+.hball-table td:last-child { text-align: left; font-size: 13.5px; color: var(--ink-2); line-height: 1.55; padding-right: 10px; }
 .hball-table tr:last-child td { border-bottom: none; }
 .hb { display: inline-block; width: 18px; height: 18px; vertical-align: middle; }
 
 .cmp-table { width: 100%; border-collapse: collapse; }
-.cmp-table th { font-size: 11.5px; font-weight: 700; color: #4a4540; text-transform: uppercase; letter-spacing: .05em; padding: 10px 10px; text-align: left; border-bottom: 2px solid #c8c0b0; }
+.cmp-table th { font-size: 12px; font-weight: 700; color: var(--mute); text-transform: uppercase; letter-spacing: .05em; padding: 10px 10px; text-align: left; border-bottom: 1px solid var(--line); }
 .cmp-table th.c { text-align: center; }
-.cmp-table td { padding: 10px 10px; font-size: 13.5px; color: #1a1a15; border-bottom: 1px solid #e8e2d0; }
+.cmp-table td { padding: 11px 10px; font-size: 14px; color: var(--ink); border-bottom: 1px solid var(--line-2); }
 .cmp-table tr:last-child td { border-bottom: none; }
 .cmp-table .cn { font-weight: 600; }
-.cmp-table .hi { color: #0a3a1e; font-weight: 700; }
-.cmp-table .lo { color: #a82a0a; font-weight: 700; }
-.cmp-table .mid { color: #8a4f15; font-weight: 600; }
-.cmp-table .mute { color: #6a6458; }
+.cmp-table .hi { color: var(--path-a); font-weight: 700; }
+.cmp-table .lo { color: var(--accent); font-weight: 700; }
+.cmp-table .mid { color: var(--path-b-ink); font-weight: 600; }
+.cmp-table .mute { color: var(--mute); }
 .cmp-table .c { text-align: center; }
 
 .rec-hero { display: grid; grid-template-columns: 1fr; gap: 14px; margin: 20px 0 24px; }
 @media (min-width: 720px) { .rec-hero { grid-template-columns: 1fr 1fr; } }
-.rec-card { background: #fff; border: 1px solid #c8c0b0; border-left: 5px solid; border-radius: 12px; padding: 20px 22px 18px; display: flex; flex-direction: column; }
-.rec-card.A { border-left-color: #0a3a1e; }
-.rec-card.B { border-left-color: #8a4f15; }
+.rec-card { background: #fff; border: 1px solid var(--line); border-top: 3px solid; border-radius: 12px; padding: 20px 22px 18px; display: flex; flex-direction: column; box-shadow: var(--shadow-xs); }
+.rec-card.A { border-top-color: var(--path-a); }
+.rec-card.B { border-top-color: var(--path-b); }
 .rec-top { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
-.rec-badge { font-size: 11px; font-weight: 800; letter-spacing: .08em; padding: 3px 10px; border-radius: 10px; }
-.rec-card.A .rec-badge { background: #0a3a1e; color: #d4b86e; }
-.rec-card.B .rec-badge { background: #4a2a10; color: #d4b86e; }
-.rec-country { font-size: 26px; font-weight: 800; color: #14140f; line-height: 1.1; }
-.rec-type { font-size: 12.5px; color: #6a6458; margin-bottom: 14px; font-weight: 500; letter-spacing: .02em; }
-.rec-thesis { font-size: 14.5px; color: #1a1a15; line-height: 1.7; }
-.rec-thesis strong { color: #14140f; font-weight: 700; }
-.rec-card.A .rec-thesis em { font-style: normal; color: #0a3a1e; font-weight: 700; }
-.rec-card.B .rec-thesis em { font-style: normal; color: #8a4f15; font-weight: 700; }
+.rec-badge { font-size: 11.5px; font-weight: 800; letter-spacing: .08em; padding: 3px 10px; border-radius: 6px; }
+.rec-card.A .rec-badge { background: var(--path-a-soft); color: var(--path-a); }
+.rec-card.B .rec-badge { background: var(--path-b-soft); color: var(--path-b-ink); }
+.rec-country { font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1.1; }
+.rec-type { font-size: 13px; color: var(--mute); margin-bottom: 14px; font-weight: 500; letter-spacing: .02em; }
+.rec-thesis { font-size: 14px; color: var(--ink-2); line-height: 1.7; }
+.rec-thesis strong { color: var(--ink); font-weight: 600; }
+.rec-card.A .rec-thesis em { font-style: normal; color: var(--path-a); font-weight: 700; }
+.rec-card.B .rec-thesis em { font-style: normal; color: var(--path-b-ink); font-weight: 700; }
 
 .sub-rec-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
 @media (min-width: 680px) { .sub-rec-grid { grid-template-columns: 1fr 1fr; } }
-.sub-rec { background: #fff; border: 1px solid #c8c0b0; border-radius: 12px; padding: 16px 18px 14px; }
-.sub-rec.wait { border-left: 4px solid #6a88b0; }
-.sub-rec.no { border-left: 4px solid #8a8475; background: #ecebe6; }
+.sub-rec { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px 13px; box-shadow: var(--shadow-xs); }
+.sub-rec.wait { border-left: 3px solid var(--accent); }
+.sub-rec.no { border-left: 3px solid var(--mute); background: var(--surface-2); }
 .sub-rec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
-.sub-rec-title { font-size: 15px; font-weight: 700; color: #14140f; }
-.sub-rec-tag { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; padding: 2px 8px; border-radius: 10px; background: #dfe8f4; color: #0a2040; }
-.sub-rec.no .sub-rec-tag { background: #d4d0c8; color: #4a4540; }
-.sub-rec-body { font-size: 13px; color: #2a2a26; line-height: 1.6; }
-.sub-rec-body strong { color: #14140f; font-weight: 700; }
+.sub-rec-title { font-size: 16px; font-weight: 700; color: var(--ink); }
+.sub-rec-tag { font-size: 11px; font-weight: 700; letter-spacing: .08em; padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent-ink); }
+.sub-rec.no .sub-rec-tag { background: var(--line-2); color: var(--mute); }
+.sub-rec-body { font-size: 13.5px; color: var(--ink-2); line-height: 1.65; }
+.sub-rec-body strong { color: var(--ink); font-weight: 600; }
 
-.disclaimer { background: #fdf5ea; border: 1px dashed #d48a35; border-radius: 10px; padding: 14px 16px; margin: 16px 0; font-size: 13.5px; color: #4a2a10; line-height: 1.65; }
-.disclaimer strong { color: #8a4f15; font-weight: 700; }
+.disclaimer { background: var(--accent-soft); border: 1px dashed var(--accent); border-radius: 8px; padding: 12px 14px; margin: 14px 0; font-size: 13.5px; color: var(--accent-ink); line-height: 1.65; }
+.disclaimer strong { color: var(--accent-ink); font-weight: 700; }
 
-.data-note { padding: 28px 28px 0; font-size: 12.5px; color: #4a4540; line-height: 1.7; }
-.data-note strong { color: #14140f; }
+.data-note { padding: 24px 28px 0; font-size: 12.5px; color: var(--mute); line-height: 1.7; }
+.data-note strong { color: var(--ink-2); }
 
 @media (max-width: 600px) {
-  .hero { padding: 36px 20px; }
-  .hero-title { font-size: 24px; }
-  .section { padding: 32px 20px 0; }
-  .divider { margin: 36px 20px 0; }
-  .tabs-wrap { padding: 0 20px; }
-  .data-note { padding: 22px 20px 0; }
-  .global-note { margin-left: 20px; margin-right: 20px; }
-  .hbar-row { grid-template-columns: 80px 1fr 68px; gap: 8px; font-size: 13px; }
-  .rec-country { font-size: 20px; }
+  body { font-size: 14.5px; }
+  .hero { padding: 28px 18px 22px; }
+  .hero-title { font-size: 21px; }
+  .hero-sub { font-size: 13.5px; }
+  .section { padding: 24px 18px 0; }
+  .divider { margin: 28px 18px 0; }
+  .tabs-wrap { padding: 0 18px; position: static; }
+  .tabs { gap: 6px; }
+  .tab-btn { padding: 9px 10px; font-size: 13.5px; }
+  .tab-btn .tab-eyebrow { font-size: 10.5px; }
+  .data-note { padding: 16px 18px 0; font-size: 12.5px; }
+  .global-note { margin-left: 18px; margin-right: 18px; font-size: 13px; }
+  .filter-step { padding: 10px 12px; gap: 8px; }
+  .step-text { font-size: 14.5px; }
+  .step-sub { font-size: 12px; }
+  .mk-chart { padding: 12px; border-radius: 12px; }
+  .mk-action { font-size: 15px; }
+  .mk-subtitle { font-size: 12px; margin-left: 0; }
+  .chart-legend { gap: 6px 10px; font-size: 12px; }
+  .chart-legend .lg-note { font-size: 11.5px; }
+  .hbar-row { grid-template-columns: 70px 1fr 58px; gap: 6px; font-size: 12.5px; }
+  .hbar-label, .hbar-val { font-size: 12px; }
+  .rec-country { font-size: 18px; }
+  .rec-thesis, .type-desc, .sub-rec-body, .stage-criteria, .fw-card .fw-d { font-size: 13.5px; }
+  .source-toggle { padding: 8px 10px; font-size: 12px; }
+  .fw-formula { padding: 10px 12px; gap: 6px 8px; }
+  .fw-formula .ff-eq { font-size: 11.5px; width: 100%; margin-bottom: 2px; }
+  .fw-formula .ff-pill { padding: 4px 8px; font-size: 11.5px; }
+  .inline-expand { font-size: 13px; padding: 10px 12px; }
+  .sec-title { font-size: 19px; }
+  .sec-body { font-size: 13.5px; }
+  .fw-card, .type-card, .rec-card, .sub-rec, .filter-step, .fork-branch { padding: 14px; }
+  .stage-panel { padding: 10px 12px; }
+}
+@media (max-width: 720px) {
+  .fw-card, .type-card, .sub-rec, .rec-card { border-radius: 14px; }
+  .cmp-table, .hball-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .cmp-table th, .cmp-table td, .hball-table th, .hball-table td { white-space: nowrap; }
+  .cmp-table td:last-child, .hball-table td:last-child { white-space: normal; min-width: 210px; }
+  .toolbar { bottom: 70px; }
 }
 
 /* ========== Floating toolbar ========== */
 .toolbar { position: fixed; right: 14px; bottom: 14px; z-index: 500; display: flex; flex-direction: column; gap: 8px; }
 .toolbar button {
-  background: #14140f; color: #f4f0e6; border: 0; border-radius: 22px;
-  padding: 10px 16px; font-size: 13.5px; font-weight: 600; cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0,0,0,.22);
+  background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 999px;
+  padding: 9px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  box-shadow: var(--shadow-md);
   font-family: inherit;
 }
-.toolbar button:hover { background: #2a2a26; }
-.toolbar button.active { background: #d4b86e; color: #14140f; }
+.toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.toolbar button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 /* ========== Editable mode visual feedback ========== */
 body.editing [contenteditable="true"] {
-  outline: 1px dashed rgba(212,184,110,.55);
+  outline: 1px dashed rgba(31,59,109,.35);
   outline-offset: 2px;
   border-radius: 3px;
   transition: outline-color .15s;
 }
-body.editing [contenteditable="true"]:hover { outline-color: #d4b86e; outline-style: solid; }
+body.editing [contenteditable="true"]:hover { outline-color: var(--accent); outline-style: solid; }
 body.editing [contenteditable="true"]:focus {
-  outline: 2px solid #d4b86e; outline-offset: 2px;
-  background: rgba(212,184,110,.08);
+  outline: 2px solid var(--accent); outline-offset: 2px;
+  background: var(--accent-soft);
 }
 body.editing .tab-btn[contenteditable="true"] { cursor: text; }
 body.editing .zoom-btn { display: none; }
@@ -225,7 +360,7 @@ body.editing .zoom-btn { display: none; }
 .mk-chart { position: relative; }
 .zoom-btn {
   position: absolute; top: 10px; right: 10px; z-index: 3;
-  background: rgba(20,20,15,.82); color: #f4f0e6; border: 0;
+  background: var(--surface); color: var(--ink-2); border: 1px solid var(--line);
   padding: 6px 11px; font-size: 12px; font-weight: 600;
   border-radius: 14px; cursor: pointer; font-family: inherit;
   display: flex; align-items: center; gap: 4px;
@@ -240,21 +375,21 @@ body.editing .zoom-btn { display: none; }
 .chart-modal.open { display: flex; }
 .chart-modal-bar {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 16px; background: #14140f; color: #f4f0e6;
-  border-bottom: 1px solid #2a2a26;
+  padding: 12px 16px; background: #fff; color: var(--ink);
+  border-bottom: 1px solid var(--line);
 }
-.chart-modal-bar .cm-hint { font-size: 12px; color: #a8a090; }
+.chart-modal-bar .cm-hint { font-size: 12px; color: var(--mute); }
 .chart-modal-bar .cm-close {
-  background: #d4b86e; color: #14140f; border: 0; padding: 7px 16px;
+  background: var(--accent); color: #fff; border: 0; padding: 7px 16px;
   border-radius: 18px; font-size: 13px; font-weight: 700; cursor: pointer;
   font-family: inherit;
 }
 .chart-modal-body {
-  flex: 1; overflow: auto; padding: 20px; background: #faf7ef;
+  flex: 1; overflow: auto; padding: 20px; background: var(--surface-2);
   -webkit-overflow-scrolling: touch;
 }
 .chart-modal-body > .mk-chart {
-  background: #fff; padding: 20px; border-radius: 8px;
+  background: #fff; padding: 20px; border-radius: 10px;
   min-width: 720px; max-width: 1400px; margin: 0 auto;
 }
 .chart-modal-body .scatter-svg { width: 100%; height: auto; }
@@ -262,53 +397,54 @@ body.editing .zoom-btn { display: none; }
 /* ========== Table of Contents ========== */
 .toc-toggle {
   position: fixed; left: 14px; bottom: 14px; z-index: 500;
-  background: #14140f; color: #f4f0e6; border: 0; border-radius: 22px;
-  padding: 10px 16px; font-size: 13.5px; font-weight: 600; cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0,0,0,.22); font-family: inherit;
+  background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 999px;
+  padding: 9px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  box-shadow: var(--shadow-md); font-family: inherit;
   display: flex; align-items: center; gap: 6px;
 }
-.toc-toggle:hover { background: #2a2a26; }
+.toc-toggle:hover { border-color: var(--accent); color: var(--accent); }
 .toc-toggle .toc-icon { font-size: 14px; line-height: 1; }
 .toc-drawer {
   position: fixed; top: 0; left: 0; height: 100vh; width: 280px;
-  background: #14140f; color: #f4f0e6; z-index: 600;
+  background: #fff; color: var(--ink); z-index: 600;
   transform: translateX(-100%); transition: transform .28s ease;
   display: flex; flex-direction: column;
-  box-shadow: 2px 0 20px rgba(0,0,0,.28);
+  box-shadow: 2px 0 24px rgba(0,0,0,.08);
+  border-right: 1px solid var(--line);
 }
 .toc-drawer.open { transform: translateX(0); }
 .toc-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 599;
+  position: fixed; inset: 0; background: rgba(0,0,0,.25); z-index: 599;
   opacity: 0; pointer-events: none; transition: opacity .2s;
 }
 .toc-overlay.open { opacity: 1; pointer-events: auto; }
 .toc-head {
-  padding: 18px 20px 14px; border-bottom: 1px solid #2a2a26;
+  padding: 18px 20px 14px; border-bottom: 1px solid var(--line);
   display: flex; justify-content: space-between; align-items: center;
 }
-.toc-head-title { font-size: 14px; font-weight: 700; letter-spacing: .1em; color: #d4b86e; text-transform: uppercase; }
+.toc-head-title { font-size: 12px; font-weight: 800; letter-spacing: .12em; color: var(--accent); text-transform: uppercase; }
 .toc-close {
-  background: transparent; color: #a8a090; border: 0; font-size: 22px;
+  background: transparent; color: var(--mute); border: 0; font-size: 22px;
   cursor: pointer; line-height: 1; padding: 0 4px;
 }
 .toc-list { flex: 1; overflow-y: auto; padding: 10px 0; }
 .toc-item {
   display: flex; align-items: baseline; gap: 10px;
-  padding: 11px 20px; color: #d4cfc0; cursor: pointer;
-  font-size: 14.5px; line-height: 1.4; border-left: 3px solid transparent;
-  transition: background .15s, border-color .15s, color .15s;
+  padding: 10px 20px; color: var(--ink-2); cursor: pointer;
+  font-size: 14px; line-height: 1.4; border-left: 3px solid transparent;
+  transition: all .15s;
 }
-.toc-item:hover { background: #2a2a26; color: #f4f0e6; }
-.toc-item.active { border-left-color: #d4b86e; color: #d4b86e; background: #1e1e18; }
-.toc-num { font-size: 11px; font-weight: 700; color: #8a8475; min-width: 22px; letter-spacing: .05em; }
-.toc-item.active .toc-num { color: #d4b86e; }
+.toc-item:hover { background: var(--surface-2); color: var(--ink); }
+.toc-item.active { border-left-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.toc-num { font-size: 11px; font-weight: 700; color: var(--mute); min-width: 22px; letter-spacing: .05em; }
+.toc-item.active .toc-num { color: var(--accent); }
 .toc-tag {
   display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 3px;
   font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
 }
-.toc-tag.a { background: rgba(42,157,106,.22); color: #6fd09a; }
-.toc-tag.b { background: rgba(138,79,21,.28); color: #e0a86a; }
-.toc-foot { padding: 12px 20px; border-top: 1px solid #2a2a26; font-size: 12px; color: #6a6458; }
+.toc-tag.a { background: var(--path-a-soft); color: var(--path-a); }
+.toc-tag.b { background: var(--path-b-soft); color: var(--path-b-ink); }
+.toc-foot { padding: 12px 20px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--mute); }
 
 /* ========== Chart tooltip ========== */
 .scatter-svg circle.bubble-hit {
@@ -319,24 +455,25 @@ body.editing .zoom-btn { display: none; }
 }
 .chart-tooltip {
   position: fixed; z-index: 950;
-  background: #14140f; color: #f4f0e6;
+  background: var(--surface); color: var(--ink);
   padding: 10px 12px; border-radius: 8px;
   font-size: 12.5px; line-height: 1.55;
-  box-shadow: 0 6px 24px rgba(0,0,0,.35);
+  box-shadow: 0 8px 28px rgba(20,20,25,.12);
   pointer-events: none;
   max-width: 260px; min-width: 180px;
   opacity: 0; transform: translateY(-4px);
   transition: opacity .14s, transform .14s;
-  border-left: 3px solid #d4b86e;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
 }
 .chart-tooltip.visible { opacity: 1; transform: translateY(0); }
-.chart-tooltip .tt-country { font-size: 14px; font-weight: 700; color: #d4b86e; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-.chart-tooltip .tt-badge { font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 3px; background: #2a2a26; color: #a8a090; letter-spacing: .04em; }
+.chart-tooltip .tt-country { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.chart-tooltip .tt-badge { font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 3px; background: var(--surface-2); color: var(--mute); letter-spacing: .04em; }
 .chart-tooltip .tt-row { display: flex; justify-content: space-between; gap: 12px; }
 .chart-tooltip .tt-row + .tt-row { margin-top: 2px; }
-.chart-tooltip .tt-k { color: #a8a090; }
-.chart-tooltip .tt-v { font-weight: 600; color: #f4f0e6; }
-.chart-tooltip .tt-note { margin-top: 6px; padding-top: 6px; border-top: 1px solid #2a2a26; font-size: 11.5px; color: #a8a090; }
+.chart-tooltip .tt-k { color: var(--mute); }
+.chart-tooltip .tt-v { font-weight: 600; color: var(--ink); }
+.chart-tooltip .tt-note { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--mute); }
 
 /* ========== Collapsible section ========== */
 .collapse-head {
@@ -344,18 +481,18 @@ body.editing .zoom-btn { display: none; }
   display: flex; align-items: center; gap: 10px;
   transition: color .15s;
 }
-.collapse-head:hover { color: #8a4f15; }
+.collapse-head:hover { color: var(--accent); }
 .collapse-caret {
-  display: inline-block; font-size: 16px; color: #8a8475;
+  display: inline-block; font-size: 14px; color: var(--mute);
   transition: transform .22s; min-width: 12px;
 }
-.collapse-head.open .collapse-caret { transform: rotate(90deg); color: #8a4f15; }
+.collapse-head.open .collapse-caret { transform: rotate(90deg); color: var(--accent); }
 .collapse-count {
-  margin-left: auto; font-size: 12px; font-weight: 600;
-  color: #8a4f15; background: #fcf1de; padding: 3px 10px;
-  border-radius: 10px; letter-spacing: .02em;
+  margin-left: auto; font-size: 11.5px; font-weight: 600;
+  color: var(--accent); background: var(--accent-soft); padding: 2px 9px;
+  border-radius: 999px; letter-spacing: .02em;
 }
-.collapse-hint { font-size: 13px; color: #8a8475; }
+.collapse-hint { font-size: 12.5px; color: var(--mute); }
 .collapse-body[hidden] { display: none; }
 .collapse-body { animation: collapseFade .22s ease; }
 @keyframes collapseFade { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }
@@ -367,6 +504,170 @@ body.editing .zoom-btn { display: none; }
   .toc-drawer { width: 84vw; }
   .chart-tooltip { max-width: 200px; font-size: 12px; }
 }
+
+/* ========== Layer 0: Long list → Short list (funnel rail) ========== */
+.stage-rail { position: relative; margin: 22px 0 16px; }
+.stage-rail::before {
+  content: ''; position: absolute;
+  left: 59px; top: 56px; bottom: 56px;
+  width: 2px;
+  background: repeating-linear-gradient(to bottom, var(--line) 0 8px, transparent 8px 14px);
+  z-index: 0;
+}
+.stage-node {
+  display: grid; grid-template-columns: 122px 1fr;
+  gap: 16px; align-items: stretch;
+  margin-bottom: 12px; position: relative;
+}
+.stage-node:last-child { margin-bottom: 0; }
+.stage-bubble {
+  z-index: 1;
+  width: 122px; min-height: 96px;
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 8px 6px;
+  cursor: help; position: relative;
+  transition: all .15s;
+  box-shadow: var(--shadow-xs);
+}
+.stage-bubble:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: var(--shadow-sm); }
+.stage-bubble .stage-num { font-size: 34px; font-weight: 700; color: var(--ink); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.stage-bubble .stage-unit { font-size: 12px; color: var(--mute); margin-top: 6px; font-weight: 600; line-height: 1.25; }
+.stage-node.start .stage-bubble { border-color: var(--accent); background: var(--accent-soft); }
+.stage-node.start .stage-bubble .stage-num { color: var(--accent); }
+.stage-node.start .stage-bubble .stage-unit { color: var(--accent-ink); }
+.stage-delta {
+  position: absolute; left: 138px; top: -6px; z-index: 2;
+  background: #fff; color: var(--accent); border: 1px solid var(--line);
+  font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  padding: 2px 9px; border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: var(--shadow-xs);
+}
+.stage-panel {
+  background: #fff; border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 13px 16px;
+  display: flex; flex-direction: column; justify-content: center;
+  box-shadow: var(--shadow-xs);
+}
+.stage-node.start .stage-panel { border-left-color: var(--ink); }
+.stage-label { font-size: 11px; font-weight: 800; color: var(--accent); letter-spacing: .08em; margin-bottom: 4px; text-transform: uppercase; }
+.stage-node.start .stage-label { color: var(--ink); }
+.stage-criteria { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
+.stage-criteria strong { color: var(--ink); font-weight: 600; }
+.stage-criteria em { font-style: normal; color: var(--mute); }
+.stage-source { font-size: 12px; color: var(--mute); margin-top: 6px; font-weight: 500; }
+
+@media (max-width: 640px) {
+  .stage-rail::before { left: 36px; top: 40px; bottom: 40px; }
+  .stage-node { grid-template-columns: 76px 1fr; gap: 10px; }
+  .stage-bubble { width: 76px; min-height: 72px; }
+  .stage-bubble .stage-num { font-size: 22px; }
+  .stage-bubble .stage-unit { font-size: 10.5px; margin-top: 3px; }
+  .stage-delta { left: 86px; font-size: 10.5px; padding: 1px 7px; }
+  .stage-panel { padding: 10px 12px; }
+  .stage-criteria { font-size: 13.5px; }
+}
+
+.fork-label {
+  text-align: center; margin: 22px 0 14px;
+  font-size: 12px; font-weight: 800; color: var(--accent);
+  letter-spacing: .12em; text-transform: uppercase;
+  position: relative;
+}
+.fork-label::before, .fork-label::after {
+  content: ''; position: absolute; top: 50%;
+  width: 24%; height: 1px; background: var(--line);
+}
+.fork-label::before { left: 0; }
+.fork-label::after { right: 0; }
+
+.fork-wrap {
+  display: grid; grid-template-columns: 1fr; gap: 14px;
+  margin-bottom: 18px;
+}
+@media (min-width: 720px) { .fork-wrap { grid-template-columns: 1fr 1fr; gap: 16px; } }
+.fork-branch {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 18px 18px; position: relative;
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-xs);
+}
+.fork-branch.A { border-top: 3px solid var(--path-a); }
+.fork-branch.B { border-top: 3px solid var(--path-b); }
+.fork-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.fork-tag {
+  display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: .08em;
+  padding: 3px 9px; border-radius: 6px;
+}
+.fork-branch.A .fork-tag { background: var(--path-a-soft); color: var(--path-a); }
+.fork-branch.B .fork-tag { background: var(--path-b-soft); color: var(--path-b-ink); }
+.fork-title { font-size: 17px; font-weight: 700; color: var(--ink); }
+.fork-criteria { margin: 0 0 14px 0; padding-left: 20px; font-size: 13.5px; line-height: 1.7; color: var(--ink-2); }
+.fork-criteria li { margin-bottom: 4px; }
+.fork-criteria strong { color: var(--ink); font-weight: 600; }
+.fork-branch.A .fork-criteria strong { color: var(--path-a); }
+.fork-branch.B .fork-criteria strong { color: var(--path-b-ink); }
+
+.fork-result {
+  margin-top: auto; padding: 12px 14px;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px;
+}
+.fork-result-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 9px; gap: 10px;
+}
+.fork-result-label { font-size: 11px; font-weight: 800; color: var(--mute); letter-spacing: .08em; text-transform: uppercase; }
+.fork-result-count {
+  font-size: 20px; font-weight: 700; color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.fork-branch.A .fork-result-count { color: var(--path-a); }
+.fork-branch.B .fork-result-count { color: var(--path-b-ink); }
+.fork-result-count .rc-unit { font-size: 12px; font-weight: 600; color: var(--mute); margin-left: 3px; }
+.fork-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.fork-chip {
+  background: #fff; border: 1px solid var(--line); border-radius: 999px;
+  padding: 4px 11px; font-size: 13px; font-weight: 500; color: var(--ink-2);
+  line-height: 1.3;
+}
+.fork-branch.A .fork-chip.primary { background: var(--path-a); color: #fff; border-color: var(--path-a); font-weight: 600; }
+.fork-branch.B .fork-chip.primary { background: var(--path-b); color: #fff; border-color: var(--path-b); font-weight: 600; }
+.fork-chip.note { background: var(--surface-2); color: var(--mute); font-style: italic; font-weight: 500; border-color: var(--line); }
+.fork-chip .chip-sub { font-size: 11px; color: inherit; opacity: .78; font-weight: 500; margin-left: 4px; }
+
+.final-row {
+  margin: 16px 0 6px;
+  padding: 14px 20px;
+  background: var(--surface-2); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 12px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 15px; gap: 12px; flex-wrap: wrap;
+}
+.final-label { font-weight: 600; letter-spacing: .02em; color: var(--ink-2); }
+.final-value { font-size: 22px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.final-note { font-size: 12.5px; font-weight: 400; color: var(--mute); margin-left: 6px; }
+
+/* Stage tooltip reuses .chart-tooltip with minor override */
+.chart-tooltip.stage-tip { max-width: 340px; }
+.chart-tooltip.stage-tip .tt-country { font-size: 13px; color: var(--accent); margin-bottom: 6px; }
+.chart-tooltip.stage-tip .tt-list { font-size: 12.5px; line-height: 1.65; color: var(--ink); }
+
+.exclude-list { margin: 8px 0 0 0; padding: 0 0 0 18px; font-size: 13.5px; line-height: 1.75; color: var(--ink-2); }
+.exclude-list li { margin-bottom: 3px; }
+.exclude-list strong { color: var(--ink); }
+
+.weak-item { padding: 11px 0; border-bottom: 1px solid var(--line-2); }
+.weak-item:last-child { border-bottom: 0; }
+.weak-title { font-size: 14px; color: var(--ink-2); line-height: 1.6; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+.weak-title strong { color: var(--accent); font-weight: 700; }
+
+.step-block { margin-bottom: 14px; padding-left: 12px; border-left: 2px solid var(--path-b-soft); }
+.step-block:last-of-type { margin-bottom: 10px; }
+.step-tag { display: inline-block; font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--path-b-ink); background: var(--path-b-soft); padding: 2px 8px; border-radius: 4px; margin-right: 8px; }
+.thesis-foot { margin-top: 8px; padding-top: 10px; border-top: 1px dashed var(--line); font-size: 13.5px; color: var(--ink); }
 
 </style>
 </head>
@@ -382,13 +683,15 @@ body.editing .zoom-btn { display: none; }
   </div>
   <div class="toc-list">
     <a class="toc-item" data-target="sec-framework" data-tab=""><span class="toc-num">00</span><span>核心框架</span></a>
-    <a class="toc-item" data-target="sec-layer-1" data-tab="A"><span class="toc-num">01</span><span>第 1 层：效率差有多大<span class="toc-tag a">路径1</span></span></a>
-    <a class="toc-item" data-target="sec-layer-2" data-tab="A"><span class="toc-num">02</span><span>第 2 层：差距根因<span class="toc-tag a">路径1</span></span></a>
-    <a class="toc-item" data-target="sec-layer-3" data-tab="A"><span class="toc-num">03</span><span>第 3 层：规模 + 拐点<span class="toc-tag a">路径1</span></span></a>
-    <a class="toc-item" data-target="sec-layer-4" data-tab="A"><span class="toc-num">04</span><span>第 4 层：集团资源<span class="toc-tag a">路径1</span></span></a>
-    <a class="toc-item" data-target="sec-kenya" data-tab="B"><span class="toc-num">05</span><span>肯尼亚冷链案例<span class="toc-tag b">路径2</span></span></a>
-    <a class="toc-item" data-target="sec-recommend" data-tab=""><span class="toc-num">06</span><span>两条推荐路径</span></a>
-    <a class="toc-item" data-target="sec-weaknesses" data-tab=""><span class="toc-num">07</span><span>已知的推导弱点</span></a>
+    <a class="toc-item" data-target="sec-layer-0" data-tab=""><span class="toc-num">01</span><span>第 0 层：候选池来源</span></a>
+    <a class="toc-item" data-target="sec-layer-1" data-tab="A"><span class="toc-num">02</span><span>第 1 层：效率差有多大<span class="toc-tag a">路径1</span></span></a>
+    <a class="toc-item" data-target="sec-layer-2" data-tab="A"><span class="toc-num">03</span><span>第 2 层：差距根因<span class="toc-tag a">路径1</span></span></a>
+    <a class="toc-item" data-target="sec-layer-3" data-tab="A"><span class="toc-num">04</span><span>第 3 层：规模 + 拐点<span class="toc-tag a">路径1</span></span></a>
+    <a class="toc-item" data-target="sec-layer-4" data-tab="A"><span class="toc-num">05</span><span>第 4 层：集团资源<span class="toc-tag a">路径1</span></span></a>
+    <a class="toc-item" data-target="sec-vietnam-landing" data-tab="A"><span class="toc-num">06</span><span>越南落地要点<span class="toc-tag a">路径1</span></span></a>
+    <a class="toc-item" data-target="sec-kenya" data-tab="B"><span class="toc-num">07</span><span>肯尼亚两步走案例<span class="toc-tag b">路径2</span></span></a>
+    <a class="toc-item" data-target="sec-recommend" data-tab=""><span class="toc-num">08</span><span>两条推荐路径</span></a>
+    <a class="toc-item" data-target="sec-weaknesses" data-tab=""><span class="toc-num">09</span><span>已知的推导弱点</span></a>
   </div>
   <div class="toc-foot">按 Esc 关闭 · 点击章节自动切换 Tab</div>
 </nav>
@@ -409,22 +712,39 @@ body.editing .zoom-btn { display: none; }
 <div class="hero">
   <div class="hero-eyebrow">战略分析备忘录 · 2026.04</div>
   <h1 class="hero-title">物流科技出海：<br><em>能力溢出套利</em>框架<br>与市场选择路径</h1>
-  <p class="hero-sub">中国已在本土完成供应链科技的<strong style="color:#d4b86e;font-weight:700">产品能力与规模落地验证</strong>——这套能力输出到效率/能力供应洼地市场获取溢价与市场机会。本报告从 12 个候选市场的公开数据出发，按三条件筛选两类机会。对标产品：B2B 供应链数字化平台（WMS/TMS/OMS + 供应链计划/控制塔 + AI 调度）。</p>
-  <div class="hero-verdict">
-    <strong>核心结论：</strong>综合市场路径 — 推荐 <strong>越南</strong>；垂直领域路径 — 推荐 <strong>肯尼亚出口农业冷链</strong>。两条路径的产品形态、客户画像、组织设计完全不同，需独立规划。
+  <p class="hero-sub">中国供应链科技已在本土完成<strong>能力与规模验证</strong>，按极低边际成本输出到效率洼地获取溢价。本报告从全球范围收敛候选国，识别两类机会。<button type="button" class="inline-more" data-expand-target="hero-more">什么是对标产品</button></p>
+  <div class="inline-expand" id="hero-more" hidden style="margin-top:10px;background:var(--surface-2);border-left-color:var(--accent);">
+    <strong>对标产品：</strong>B2B 供应链数字化平台（WMS / TMS / OMS + 供应链计划 / 控制塔 + AI 调度）。<strong>不是</strong>快递网络或配送车队的复制。
   </div>
+  <div class="hero-verdict">
+    <strong>结论：</strong>综合市场 → <strong>越南</strong>；垂直领域 → <strong>肯尼亚</strong>（先出口冷链，再看国内食品链）。两条路径产品、客户、组织不同。
+  </div>
+
+</div>
 </div>
 
 <div class="global-note">
-  <strong>本报告定位：</strong>基于公开宏观数据和业务逻辑的初筛框架（filter），用于在 12 个候选市场中划分重点关注 / 待论证 / 暂不建议三档。<strong>不是最终决策依据</strong>——任何落地均需补充：本地实地调研、集团内部资源核实、主要客户/合作方访谈、竞品深度比对。本报告的价值在于缩小调研范围、提供论证起点。
+  <strong>定位：</strong>公开数据 + 业务逻辑的初筛框架，用于把候选国分档。<button type="button" class="inline-more" data-expand-target="note-expand">如何使用</button>
+  <div class="inline-expand" id="note-expand" hidden style="margin-top:8px;">
+    <strong>不是最终决策依据。</strong>落地前需补充：本地调研、集团资源核实、客户/合作方访谈、竞品比对。本报告用于缩小调研范围、提供论证起点。
+  </div>
 </div>
 
 <div class="section" id="sec-framework">
   <p class="sec-label">核心框架</p>
   <h2 class="sec-title">能力溢出套利 = 三个条件同时成立</h2>
-  <p class="sec-body">中国供应链科技已在全球最高密度、最复杂的 B2C 物流场景跑通，研发和组织成本基本摊销。这套能力<strong>按极低边际成本输出</strong>到还没走到这一步的市场，即可获取溢价。真正的套利来源是"<strong>规模化摊销后的成本结构</strong>"，不是"中国比别人效率高"。三个条件必须同时成立，缺一不可。</p>
+  <p class="sec-body">核心逻辑：<strong>成本结构套利</strong>，不是效率领先；三条件同时成立才有机会。<button type="button" class="inline-more" data-expand-target="fw-expand">展开依据</button></p>
+  <div class="inline-expand" id="fw-expand" hidden>
+    中国 LPI 3.7 ≈ 美国 3.8——不是"中国比别人效率高"。三个条件必须同时成立：市场存在可套利 gap（条件 1）、规模够大（条件 2）、我们自己落得下去（条件 3）。
+  </div>
 
   <div class="fw-box">
+    <div class="fw-formula" aria-label="套利公式">
+      <span class="ff-eq">机会 =</span>
+      <span class="ff-pill"><span class="ff-num">1+2</span>吸引力</span>
+      <span class="ff-x">x</span>
+      <span class="ff-pill"><span class="ff-num">3</span>可行性</span>
+    </div>
     <div class="fw-wrap">
       <div class="fw-col fw-attr">
         <div class="fw-col-head">
@@ -437,7 +757,7 @@ body.editing .zoom-btn { display: none; }
             <span class="fw-num">条件 1</span>
             <div class="fw-h">效率洼地 · 可由软件覆盖</div>
             <div class="fw-d">目标市场物流效率低于中国，且差距主要来自信息/调度层（产品可覆盖），非基础设施硬约束。</div>
-            <div class="fw-m"><strong>数据：</strong>LPI 总分 + 子维度 · 物流成本/GDP <strong>（vs 中国）</strong></div>
+            <div class="fw-m"><strong>数据：</strong>LPI 总分 + 子维度 · 物流摩擦 proxy <strong>（vs 中国）</strong></div>
           </div>
           <div class="fw-card">
             <span class="fw-num">条件 2</span>
@@ -448,8 +768,8 @@ body.editing .zoom-btn { display: none; }
         </div>
       </div>
 
-      <div class="fw-x">×</div>
-      <div class="fw-x-m">× × ×</div>
+      <div class="fw-x">x</div>
+      <div class="fw-x-m">x</div>
 
       <div class="fw-col fw-feas">
         <div class="fw-col-head">
@@ -473,17 +793,17 @@ body.editing .zoom-btn { display: none; }
     </div>
   </div>
 
-  <h3 style="font-size:19px;font-weight:700;margin:36px 0 14px;color:#14140f">两类机会 · 不同的识别路径</h3>
+  <h3 style="font-size:17px;font-weight:700;margin:32px 0 12px;color:var(--ink)">两类机会 · 不同识别路径</h3>
 
   <div class="types-grid">
     <div class="type-card">
       <span class="type-badge">路径 1</span>
       <div class="type-title">综合市场能力溢出套利</div>
-      <div class="type-desc">通用供应链数字化产品输出到物流效率洼地。按三个条件 × 四层数据筛选 12 个候选国。</div>
+      <div class="type-desc">通用供应链数字化产品输出到物流效率洼地。按三个条件 × 四层数据筛选 11 个候选国。</div>
       <div class="type-meta">
         <strong>产品：</strong>WMS / TMS / OMS / 供应链计划<br>
         <strong>客户：</strong>制造业 / 零售 / 3PL<br>
-        <strong>方法：</strong>12 国通用筛选
+        <strong>方法：</strong>11 国候选池通用筛选
       </div>
     </div>
     <div class="type-card B">
@@ -496,6 +816,149 @@ body.editing .zoom-btn { display: none; }
         <strong>方法：</strong>按垂直维度重排
       </div>
     </div>
+  </div>
+</div>
+
+<div class="section" id="sec-layer-0">
+  <div class="filter-step">
+    <div class="step-num">0</div>
+    <div>
+      <div class="step-text">第 0 层：从 Long list 到 Short list</div>
+      <div class="step-sub">候选池的收敛路径，并在此分流到两条路径，各自应用独立筛选逻辑</div>
+    </div>
+  </div>
+
+  <p class="sec-body">候选池先做收敛：<strong>阶段 1-3</strong> 用公开分类可复核；<strong>阶段 4</strong> 两条路径分别筛选。数字悬停可查看完整名单。</p>
+
+  <div class="stage-rail">
+
+    <div class="stage-node start">
+      <div class="stage-bubble"
+           data-stage-title="Long list · 起点"
+           data-stage-list="World Bank / UN 全部成员经济体（含自治区域与非主权实体）——为篇幅不逐一列出。"
+           data-stage-count="195">
+        <div class="stage-num">195</div>
+        <div class="stage-unit">经济体</div>
+      </div>
+      <div class="stage-panel">
+        <div class="stage-label">阶段 1 · Long list 起点</div>
+        <div class="stage-criteria">World Bank / UN 所列全球经济体全集，未做任何过滤。</div>
+        <div class="stage-source">来源：World Bank Country and Lending Groups · UN M49</div>
+      </div>
+    </div>
+
+    <div class="stage-node">
+      <div class="stage-delta">− 约 60 个（排除高收入组）</div>
+      <div class="stage-bubble"
+           data-stage-title="被排除的高收入组（约 60 个）"
+           data-stage-list="典型样本：美 · 加 · 英 · 德 · 法 · 意 · 日 · 韩 · 澳 · 新西兰 · 荷 · 比 · 瑞士 · 挪 · 丹 · 芬 · 瑞典 · 葡 · 西 · 奥 · 爱尔兰 · 冰岛 · 卢森堡 · 以色列 · 新加坡 · 阿联酋 · 卡塔尔 · 科威特 · 巴林 · 阿曼 · 智利 · 波兰 · 匈牙利 · 捷克 · 爱沙尼亚 · 乌拉圭 · 巴拿马 · 特立尼达 · 中国香港 · 中国澳门 ……"
+           data-stage-count="135">
+        <div class="stage-num">~135</div>
+        <div class="stage-unit">非高收入组</div>
+      </div>
+      <div class="stage-panel">
+        <div class="stage-label">阶段 2 · 排除高收入组</div>
+        <div class="stage-criteria">依据 <strong>World Bank Country Income Groups（2024 财年）</strong>——GNI/capita ≥ $14,005 为 "High income"。"能力溢出套利"的前提是目标市场存在效率或成本差，高收入组不成立。</div>
+        <div class="stage-source">来源：World Bank WDI · GNI per capita, Atlas method</div>
+      </div>
+    </div>
+
+    <div class="stage-node">
+      <div class="stage-delta">− 约 80 个（未达规模门槛）</div>
+      <div class="stage-bubble"
+           data-stage-title="达到规模门槛的非高收入经济体"
+           data-stage-list="东南亚：越南 · 泰国 · 马来 · 菲律宾 · 印尼 · 缅甸   |   南亚：印度 · 巴基斯坦 · 孟加拉 · 斯里兰卡   |   中东/中亚：沙特 · 伊朗 · 伊拉克 · 土耳其 · 乌兹别克 · 哈萨克 · 阿塞拜疆   |   拉美：巴西 · 墨西哥 · 阿根廷 · 哥伦比亚 · 秘鲁 · 厄瓜多尔 · 委内瑞拉 · 多米尼加 · 危地马拉   |   非洲：尼日利亚 · 埃及 · 肯尼亚 · 南非 · 埃塞俄比亚 · 摩洛哥 · 阿尔及利亚 · 加纳 · 坦桑尼亚 · 乌干达 · 苏丹 · 安哥拉 · 莫桑比克 · 喀麦隆 · 科特迪瓦 · 马达加斯加   |   欧洲/其他：俄罗斯 · 乌克兰 · 白俄罗斯 · 罗马尼亚 · 塞尔维亚 · 保加利亚"
+           data-stage-count="55">
+        <div class="stage-num">~55</div>
+        <div class="stage-unit">达规模</div>
+      </div>
+      <div class="stage-panel">
+        <div class="stage-label">阶段 3 · 规模门槛</div>
+        <div class="stage-criteria"><strong>GDP ≥ $2,000 亿</strong><em>（IMF WEO 2024）</em> <em>或</em> <strong>人口 ≥ 3,000 万</strong><em>（UN 2024）</em>任一满足。B2B 供应链软件的客户基数、企业数字化预算与经济体量强相关。</div>
+        <div class="stage-source">来源：IMF World Economic Outlook 2024 · UN Population Division 2024</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="fork-label">阶段 4 · 分流到两条路径，应用各自的筛选逻辑</div>
+
+  <div class="fork-wrap">
+    <div class="fork-branch A">
+      <div class="fork-head">
+        <span class="fork-tag">路径 1</span>
+        <span class="fork-title">综合市场</span>
+      </div>
+      <ul class="fork-criteria">
+        <li>排除<strong>制裁与地缘高风险</strong>经济体（俄、伊朗、朝鲜、缅甸、委内瑞拉、伊拉克、苏丹等）</li>
+        <li>排除<strong>本地 B2B SaaS 生态已成熟</strong>、头部玩家难撼动的市场（欧洲中高收入圈、南非）</li>
+        <li>要求<strong>与中国贸易联系紧密</strong>（双边贸易额 Top 25 之一）<em>或</em><strong>中企物流已有触角</strong>（顺丰、极兔、菜鸟、京东物流任一）</li>
+      </ul>
+      <div class="fork-result">
+        <div class="fork-result-head">
+          <span class="fork-result-label">保留候选</span>
+          <span class="fork-result-count">9<span class="rc-unit">国</span></span>
+        </div>
+        <div class="fork-chips">
+          <span class="fork-chip primary">越南</span>
+          <span class="fork-chip">泰国</span>
+          <span class="fork-chip">马来西亚</span>
+          <span class="fork-chip">菲律宾</span>
+          <span class="fork-chip">印度尼西亚</span>
+          <span class="fork-chip">印度</span>
+          <span class="fork-chip">沙特</span>
+          <span class="fork-chip">巴西</span>
+          <span class="fork-chip">墨西哥</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="fork-branch B">
+      <div class="fork-head">
+        <span class="fork-tag">路径 2</span>
+        <span class="fork-title">垂直领域</span>
+      </div>
+      <ul class="fork-criteria">
+        <li>存在<strong>面向发达市场的外汇收入链条</strong>（单品类出口份额 ≥ 5% 等）——海外买方提供需求约束，本地出口商具备付费能力</li>
+        <li><strong>产地-口岸段存在信息/调度层短板</strong>（软件可切入，非基建硬约束）</li>
+        <li>保留 1 个<strong>对照样本</strong>以反证"付费方必须在海外"这一前提</li>
+      </ul>
+      <div class="fork-result">
+        <div class="fork-result-head">
+          <span class="fork-result-label">保留候选</span>
+          <span class="fork-result-count">2<span class="rc-unit">国</span></span>
+        </div>
+        <div class="fork-chips">
+          <span class="fork-chip primary">肯尼亚<span class="chip-sub">出口鲜活冷链 · 主案例</span></span>
+          <span class="fork-chip note">尼日利亚<span class="chip-sub">付费方在国内 · 对照样本</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="final-row">
+    <div class="final-label">合计进入第 1-4 层分析的候选池</div>
+    <div class="final-value">11 国<span class="final-note">（+ 中国作对标基准）</span></div>
+  </div>
+
+  <div class="insight amber">
+    <strong>放宽阈值可重新进入的候选，需单独评估：</strong>
+    <ul class="exclude-list">
+      <li><strong>孟加拉</strong> · 通过阶段 1-3；阶段 4（路径 1）因中企物流触角较弱而落选。全球第二大纺织出口国，建议下一轮重新评估。</li>
+      <li><strong>土耳其</strong> · 阶段 2 临界（近年在高收入/中高收入分组间浮动）；近年宏观波动 + 本地 SaaS 成熟导致路径 1 排除。</li>
+      <li><strong>埃及</strong> · 通过阶段 1-3；路径 1 因数字化拐点尚早未纳入。苏伊士走廊叙事列入观察窗。</li>
+      <li><strong>波兰</strong> · 阶段 2 已在高收入组，不符"能力溢出"前提。可作为<em>中企欧盟 nearshore 跳板</em>另行规划。</li>
+      <li><strong>阿联酋</strong> · 阶段 2 已在高收入组；LPI 3.96 高于中国。可作为<em>中东物流枢纽</em>另行规划，不适用本框架。</li>
+      <li><strong>智利 / 秘鲁 / 厄瓜多尔</strong> · 路径 2 候选——车厘子、蓝莓、香蕉等单品种对发达市场出口显著；本轮未展开是因为样本多样性考虑（同路径已有肯尼亚）。</li>
+    </ul>
+  </div>
+
+  <div class="mk-source">
+    <strong>来源：</strong>World Bank Country and Lending Groups（2024 财年分类）· IMF World Economic Outlook Database 2024 · UN Population Division 2024 · 各国海关/贸易促进机构公开统计 · 集团及关联物流上市公司 2023-2024 年报。
+  </div>
+
+  <div class="insight">
+    <strong>方法论说明：</strong>阶段 1-3 的阈值均取自公开分类或官方统计，可复核；阶段 4 依赖"贸易强度 Top 25""海外需求约束 + 本地出口商付费能力""软件可切入"等半定量判断，需结合集团内部战略优先级再校准。本层的功能是<strong>把"为什么是这 11 国"从隐含假设变成可讨论的工序</strong>，而非声称这是客观最优候选集。
   </div>
 </div>
 
@@ -517,33 +980,33 @@ body.editing .zoom-btn { display: none; }
     <div class="step-num">1</div>
     <div>
       <div class="step-text">第 1 层：效率差有多大？</div>
-      <div class="step-sub">物流成本/GDP × LPI 总分，与中国对比</div>
+      <div class="step-sub">LPI 总分 × 物流摩擦 proxy，与中国对比</div>
     </div>
   </div>
 
   <div class="mk-chart">
-    <div class="mk-action">效率洼地定位 — 越南最明显，印度需修正，拉美信号存疑</div>
-    <div class="mk-subtitle">X：物流成本/GDP（越右越贵）· Y：LPI 总分（越下越低效）· 右下象限 = 效率洼地</div>
+    <div class="mk-action">效率差与落地摩擦定位 — 越南最突出，印度不再是纯成本洼地，拉美更多是基础设施约束</div>
+    <div class="mk-subtitle">X：物流摩擦 proxy（越右摩擦越高，基于拥堵/港口/通关等公开信号）· Y：LPI 总分（越下越低效）· 右下象限 = 优先研究区</div>
 
     <svg class="scatter-svg" viewBox="0 0 780 460" xmlns="http://www.w3.org/2000/svg">
       <rect x="70" y="40" width="680" height="360" fill="#faf7ef"/>
       <line x1="70" y1="232" x2="750" y2="232" stroke="#c8c0b0" stroke-dasharray="4 3"/>
       <line x1="378" y1="40" x2="378" y2="400" stroke="#c8c0b0" stroke-dasharray="4 3"/>
-      <text x="224" y="60" text-anchor="middle" font-size="12" fill="#4a4540" font-weight="600">低成本 · 高LPI（无套利）</text>
-      <text x="564" y="60" text-anchor="middle" font-size="12" fill="#4a4540" font-weight="600">高成本 · 高LPI（地理限制）</text>
-      <text x="224" y="388" text-anchor="middle" font-size="12" fill="#4a4540" font-weight="600">低成本 · 低LPI</text>
-      <text x="564" y="388" text-anchor="middle" font-size="15" font-weight="800" fill="#a82a0a">效率洼地</text>
+      <text x="224" y="60" text-anchor="middle" font-size="12" fill="#4a4540" font-weight="600">低摩擦 · 高LPI（成熟市场）</text>
+      <text x="564" y="60" text-anchor="middle" font-size="12" fill="#4a4540" font-weight="600">高摩擦 · 高LPI（局部约束）</text>
+      <text x="224" y="388" text-anchor="middle" font-size="12" fill="#4a4540" font-weight="600">低摩擦 · 低LPI</text>
+      <text x="564" y="388" text-anchor="middle" font-size="15" font-weight="800" fill="#a82a0a">优先研究区</text>
       <line x1="70" y1="400" x2="750" y2="400" stroke="#2a2a26" stroke-width="1.5"/>
       <line x1="70" y1="40" x2="70" y2="400" stroke="#2a2a26" stroke-width="1.5"/>
       <g font-size="12" fill="#2a2a26">
-        <text x="70" y="420" text-anchor="middle">6%</text>
-        <text x="184" y="420" text-anchor="middle">9%</text>
-        <text x="298" y="420" text-anchor="middle">12%</text>
-        <text x="412" y="420" text-anchor="middle">15%</text>
-        <text x="526" y="420" text-anchor="middle">18%</text>
-        <text x="640" y="420" text-anchor="middle">21%</text>
+        <text x="70" y="420" text-anchor="middle">低</text>
+        <text x="184" y="420" text-anchor="middle">中低</text>
+        <text x="298" y="420" text-anchor="middle">中</text>
+        <text x="412" y="420" text-anchor="middle">中高</text>
+        <text x="526" y="420" text-anchor="middle">高</text>
+        <text x="640" y="420" text-anchor="middle">很高</text>
       </g>
-      <text x="412" y="446" text-anchor="middle" font-size="13" font-weight="700" fill="#14140f">物流成本 / GDP →</text>
+      <text x="412" y="446" text-anchor="middle" font-size="13" font-weight="700" fill="#14140f">物流摩擦 proxy →</text>
       <g font-size="12" fill="#2a2a26">
         <text x="62" y="45" text-anchor="end">3.8</text>
         <text x="62" y="141" text-anchor="end">3.5</text>
@@ -552,55 +1015,53 @@ body.editing .zoom-btn { display: none; }
         <text x="62" y="405" text-anchor="end">2.6</text>
       </g>
       <text x="26" y="220" text-anchor="middle" font-size="13" font-weight="700" fill="#14140f" transform="rotate(-90 26 220)">← LPI 总分</text>
-      <line x1="450" y1="40" x2="450" y2="400" stroke="#d91e18" stroke-dasharray="5 4" stroke-width="1.5" opacity=".7"/>
-      <line x1="70" y1="70" x2="750" y2="70" stroke="#d91e18" stroke-dasharray="5 4" stroke-width="1.2" opacity=".45"/>
-      <circle cx="450" cy="70" r="14" fill="#d91e18" stroke="#8a0a05" stroke-width="2"/>
+      <line x1="450" y1="40" x2="450" y2="400" stroke="var(--accent)" stroke-dasharray="5 4" stroke-width="1.5" opacity=".7"/>
+      <line x1="70" y1="70" x2="750" y2="70" stroke="var(--accent)" stroke-dasharray="5 4" stroke-width="1.2" opacity=".45"/>
+      <circle cx="450" cy="70" r="14" fill="var(--accent)" stroke="#8a0a05" stroke-width="2"/>
       <text x="450" y="74" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">中国</text>
-      <text x="462" y="54" text-anchor="start" font-size="10.5" fill="#d91e18" font-weight="700">参照标杆</text>
-      <circle cx="614" cy="190" r="22" fill="#2a9d6a" fill-opacity=".85" stroke="#0a3a1e" stroke-width="2.5"/>
+      <text x="462" y="54" text-anchor="start" font-size="10.5" fill="var(--accent)" font-weight="700">参照标杆</text>
+      <circle cx="614" cy="190" r="22" fill="#1f3b6d" fill-opacity=".85" stroke="var(--accent-ink)" stroke-width="2.5"/>
       <text x="614" y="194" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">越南</text>
-      <circle cx="317" cy="220" r="15" fill="#d48a35" fill-opacity=".8" stroke="#8a4f15" stroke-width="2"/>
+      <circle cx="317" cy="220" r="15" fill="#506680" fill-opacity=".8" stroke="#39495c" stroke-width="2"/>
       <text x="317" y="224" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">巴西</text>
-      <circle cx="374" cy="268" r="17" fill="#d48a35" fill-opacity=".8" stroke="#8a4f15" stroke-width="2"/>
+      <circle cx="374" cy="268" r="17" fill="#506680" fill-opacity=".8" stroke="#39495c" stroke-width="2"/>
       <text x="374" y="272" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">印尼</text>
       <circle cx="298" cy="130" r="13" fill="#a8a090" fill-opacity=".75" stroke="#4a4540" stroke-width="1.5"/>
       <text x="298" y="134" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">泰国</text>
-      <circle cx="201" cy="160" r="17" fill="#6a88b0" fill-opacity=".8" stroke="#2a3850" stroke-width="2"/>
-      <text x="201" y="164" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">印度</text>
-      <circle cx="432" cy="160" r="13" fill="none" stroke="#6a88b0" stroke-dasharray="3 3" stroke-width="1.5" opacity=".5"/>
-      <text x="432" y="145" text-anchor="middle" font-size="10" fill="#6a6458">旧估算 ~14%</text>
-      <line x1="220" y1="160" x2="418" y2="160" stroke="#6a88b0" stroke-dasharray="3 3" stroke-width="1" opacity=".5"/>
+      <circle cx="430" cy="160" r="17" fill="#98a8b8" fill-opacity=".8" stroke="#5b6a79" stroke-width="2"/>
+      <text x="430" y="164" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">印度</text>
+      <text x="454" y="145" text-anchor="start" font-size="10" fill="#6a6458">改用 proxy，不再硬比单国成本率</text>
       <circle cx="298" cy="100" r="11" fill="#a8a090" fill-opacity=".75" stroke="#4a4540" stroke-width="1.5"/>
       <text x="298" y="104" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">马来</text>
-      <circle cx="330" cy="160" r="12" fill="#6a88b0" fill-opacity=".75" stroke="#2a3850" stroke-width="1.5"/>
+      <circle cx="330" cy="160" r="12" fill="#98a8b8" fill-opacity=".75" stroke="#5b6a79" stroke-width="1.5"/>
       <text x="330" y="164" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">沙特</text>
-      <circle cx="358" cy="310" r="15" fill="#d48a35" fill-opacity=".75" stroke="#8a4f15" stroke-width="2"/>
+      <circle cx="358" cy="310" r="15" fill="#506680" fill-opacity=".75" stroke="#39495c" stroke-width="2"/>
       <text x="358" y="314" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">墨西哥</text>
-      <circle cx="110" cy="190" r="9" fill="#a8a090" fill-opacity=".5" stroke="#6a6458" stroke-dasharray="3 3"/>
-      <text x="110" y="210" text-anchor="middle" font-size="10.5" fill="#4a4540">菲律宾*</text>
-      <circle cx="110" cy="320" r="8" fill="#a8a090" fill-opacity=".5" stroke="#6a6458" stroke-dasharray="3 3"/>
-      <text x="110" y="340" text-anchor="middle" font-size="10.5" fill="#4a4540">肯尼亚*</text>
-      <circle cx="110" cy="380" r="8" fill="#a8a090" fill-opacity=".5" stroke="#6a6458" stroke-dasharray="3 3"/>
-      <text x="110" y="398" text-anchor="middle" font-size="10.5" fill="#4a4540">尼日利亚*</text>
+      <circle cx="548" cy="190" r="9" fill="#a8a090" fill-opacity=".5" stroke="#6a6458" stroke-dasharray="3 3"/>
+      <text x="548" y="210" text-anchor="middle" font-size="10.5" fill="#4a4540">菲律宾*</text>
+      <circle cx="566" cy="320" r="8" fill="#a8a090" fill-opacity=".5" stroke="#6a6458" stroke-dasharray="3 3"/>
+      <text x="566" y="340" text-anchor="middle" font-size="10.5" fill="#4a4540">肯尼亚*</text>
+      <circle cx="590" cy="380" r="8" fill="#a8a090" fill-opacity=".5" stroke="#6a6458" stroke-dasharray="3 3"/>
+      <text x="590" y="398" text-anchor="middle" font-size="10.5" fill="#4a4540">尼日利亚*</text>
     </svg>
 
     <div class="chart-legend">
       <span class="lg-title">图例：</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#d91e18"></span>中国（参照标杆）</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#2a9d6a"></span>推荐主攻</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#d48a35"></span>基础设施约束为主</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#6a88b0"></span>信号矛盾/需修正</span>
+      <span class="lg-item"><span class="lg-dot" style="background:var(--accent)"></span>中国（参照标杆）</span>
+      <span class="lg-item"><span class="lg-dot" style="background:#1f3b6d"></span>推荐主攻</span>
+      <span class="lg-item"><span class="lg-dot" style="background:#506680"></span>基础设施约束为主</span>
+      <span class="lg-item"><span class="lg-dot" style="background:#98a8b8"></span>信号矛盾/需修正</span>
       <span class="lg-item"><span class="lg-dot" style="background:#a8a090"></span>效率差小</span>
-      <span class="lg-note">圆圈大小仅为视觉标识，不承载数据含义；虚线框圆为缺乏可核实成本数据的国家。</span>
+      <span class="lg-note">圆圈大小仅为视觉标识，不承载数据含义；X 轴为基于公开信号的 proxy，不代表统一发布的物流成本/GDP。</span>
     </div>
 
     <div class="mk-source">
-      <strong>来源：</strong>World Bank LPI 2023；物流成本：中国 14.4%（国家发改委）；印度 8.9%（NCAER/DPIIT 2024）；其他国为多源区间估算（越南 VLA、巴西 IPEA 等），精度有限。* 标注国缺乏可核实的物流成本/GDP 数据。
+      <strong>来源：</strong>World Bank LPI 2023（总分、基础设施、物流能力、追踪与通关）· TomTom Traffic Index 2024 · 世界银行/各国公开港口、道路与通关资料。X 轴为代理指标，用于跨国比较摩擦方向，不等同于统一口径的物流成本/GDP。
     </div>
   </div>
 
   <div class="insight amber">
-    <strong>读图：</strong>洼地常驻者越南、印尼、巴西、墨西哥。<strong>印度关键修正</strong>——NCAER 2024 数据显示成本仅 8.9%，印度从"洼地"滑到矛盾信号区，套利空间有限。
+    <strong>读图：</strong>若不强行横比物流成本率，越南仍是"低效率 + 高摩擦"最集中的优先研究对象；印尼、巴西、墨西哥的问题更多指向基础设施与地理约束。<strong>印度关键修正</strong>——不再用 8.9% 成本率否定其摩擦问题，但其信号也不如越南集中。 
   </div>
 </div>
 
@@ -626,7 +1087,7 @@ body.editing .zoom-btn { display: none; }
       <line x1="70" y1="220" x2="750" y2="220" stroke="#8a8475"/>
       <line x1="410" y1="40" x2="410" y2="400" stroke="#8a8475"/>
       <text x="240" y="62" text-anchor="middle" font-size="12" fill="#4a4540" font-weight="700">差距都小（无套利）</text>
-      <text x="580" y="62" text-anchor="middle" font-size="15" fill="#0a3a1e" font-weight="800">信息层为主 · 产品可覆盖</text>
+      <text x="580" y="62" text-anchor="middle" font-size="15" fill="var(--accent-ink)" font-weight="800">信息层为主 · 产品可覆盖</text>
       <text x="240" y="390" text-anchor="middle" font-size="15" fill="#a82a0a" font-weight="800">基础设施为主 · 匹配度低</text>
       <text x="580" y="390" text-anchor="middle" font-size="15" fill="#4a2a08" font-weight="800">两者差距均大</text>
       <line x1="70" y1="400" x2="750" y2="400" stroke="#2a2a26" stroke-width="1.5"/>
@@ -648,26 +1109,26 @@ body.editing .zoom-btn { display: none; }
         <text x="62" y="405" text-anchor="end">-1.0</text>
       </g>
       <text x="26" y="220" text-anchor="middle" font-size="13" font-weight="700" fill="#14140f" transform="rotate(-90 26 220)">基础设施差距 →</text>
-      <circle cx="70" cy="40" r="11" fill="#d91e18" stroke="#8a0a05" stroke-width="2"/>
+      <circle cx="70" cy="40" r="11" fill="var(--accent)" stroke="#8a0a05" stroke-width="2"/>
       <text x="70" y="44" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">中国</text>
-      <text x="88" y="28" text-anchor="start" font-size="10.5" fill="#d91e18" font-weight="700">参照标杆（原点）</text>
+      <text x="88" y="28" text-anchor="start" font-size="10.5" fill="var(--accent)" font-weight="700">参照标杆（原点）</text>
       <circle cx="172" cy="184" r="10" fill="#a8a090" stroke="#4a4540" stroke-width="1.5"/>
       <text x="172" y="170" text-anchor="middle" font-size="11" fill="#14140f" font-weight="700">马来</text>
       <circle cx="274" cy="220" r="10" fill="#a8a090" stroke="#4a4540" stroke-width="1.5"/>
       <text x="274" y="206" text-anchor="middle" font-size="11" fill="#14140f" font-weight="700">泰国</text>
-      <circle cx="274" cy="256" r="11" fill="#6a88b0" fill-opacity=".85" stroke="#2a3850" stroke-width="1.5"/>
+      <circle cx="274" cy="256" r="11" fill="#98a8b8" fill-opacity=".85" stroke="#5b6a79" stroke-width="1.5"/>
       <text x="300" y="260" text-anchor="start" font-size="11" fill="#14140f" font-weight="600">印度</text>
-      <circle cx="376" cy="184" r="12" fill="#6a88b0" fill-opacity=".85" stroke="#2a3850" stroke-width="2"/>
+      <circle cx="376" cy="184" r="12" fill="#98a8b8" fill-opacity=".85" stroke="#5b6a79" stroke-width="2"/>
       <text x="376" y="166" text-anchor="middle" font-size="11" fill="#14140f" font-weight="700">沙特</text>
       <circle cx="438" cy="256" r="10" fill="#a8a090" stroke="#4a4540" stroke-width="1.5"/>
       <text x="438" y="242" text-anchor="middle" font-size="11" fill="#14140f" font-weight="600">菲律宾</text>
-      <circle cx="444" cy="274" r="17" fill="#2a9d6a" fill-opacity=".9" stroke="#0a3a1e" stroke-width="2.5"/>
+      <circle cx="444" cy="274" r="17" fill="#1f3b6d" fill-opacity=".9" stroke="var(--accent-ink)" stroke-width="2.5"/>
       <text x="444" y="278" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">越南</text>
       <g>
-        <line x1="478" y1="274" x2="600" y2="250" stroke="#0a3a1e" stroke-width="1" stroke-dasharray="3,2"/>
-        <rect x="598" y="236" width="148" height="38" fill="#fff" stroke="#0a3a1e" stroke-width="1"/>
-        <text x="605" y="252" font-size="10.5" fill="#0a3a1e" font-weight="700">落在"两者差距均大"</text>
-        <text x="605" y="266" font-size="10.5" fill="#0a3a1e">信息层可先切入，不等基建</text>
+        <line x1="478" y1="274" x2="600" y2="250" stroke="var(--accent-ink)" stroke-width="1" stroke-dasharray="3,2"/>
+        <rect x="598" y="236" width="148" height="38" fill="#fff" stroke="var(--accent-ink)" stroke-width="1"/>
+        <text x="605" y="252" font-size="10.5" fill="var(--accent-ink)" font-weight="700">落在"两者差距均大"</text>
+        <text x="605" y="266" font-size="10.5" fill="var(--accent-ink)">信息层可先切入，不等基建</text>
       </g>
       <circle cx="512" cy="328" r="13" fill="#a82a0a" fill-opacity=".8" stroke="#4a1008" stroke-width="2"/>
       <text x="512" y="332" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">巴西</text>
@@ -679,9 +1140,9 @@ body.editing .zoom-btn { display: none; }
 
     <div class="chart-legend">
       <span class="lg-title">图例：</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#d91e18"></span>中国（原点 = 标杆）</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#2a9d6a"></span>推荐主攻</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#6a88b0"></span>信息层差距为主</span>
+      <span class="lg-item"><span class="lg-dot" style="background:var(--accent)"></span>中国（原点 = 标杆）</span>
+      <span class="lg-item"><span class="lg-dot" style="background:#1f3b6d"></span>推荐主攻</span>
+      <span class="lg-item"><span class="lg-dot" style="background:#98a8b8"></span>信息层差距为主</span>
       <span class="lg-item"><span class="lg-dot" style="background:#a8a090"></span>两层差距均小</span>
       <span class="lg-item"><span class="lg-dot" style="background:#a82a0a"></span>基础设施为主</span>
       <span class="lg-note">圆圈大小仅为视觉标识，不承载数据含义。</span>
@@ -707,15 +1168,15 @@ body.editing .zoom-btn { display: none; }
   </div>
 
   <div class="mk-chart">
-    <div class="mk-action">制造业底盘：越南在样本中是唯一"占比深 + 高增速"兼得的市场</div>
-    <div class="mk-subtitle">X：制造业占 GDP · Y：5 年平均增速 · 右上象限 = 规模深 + 仍高速增长</div>
+    <div class="mk-action">制造业底盘：越南仍最突出，但不再表述为唯一"占比深 + 高增速"兼得市场</div>
+    <div class="mk-subtitle">X：制造业占 GDP · Y：5 年平均增速（按 World Bank 最新可得口径重算）· 右上象限 = 底盘深 + 持续增长</div>
 
     <svg class="scatter-svg" viewBox="0 0 780 420" xmlns="http://www.w3.org/2000/svg">
       <rect x="70" y="30" width="680" height="320" fill="#faf7ef"/>
       <line x1="70" y1="190" x2="750" y2="190" stroke="#c8c0b0" stroke-dasharray="4 3"/>
       <line x1="410" y1="30" x2="410" y2="350" stroke="#c8c0b0" stroke-dasharray="4 3"/>
       <text x="240" y="52" text-anchor="middle" font-size="12" fill="#4a4540" font-weight="600">底盘薄 + 扩张</text>
-      <text x="580" y="52" text-anchor="middle" font-size="15" fill="#0a3a1e" font-weight="800">底盘深 + 扩张 ← 最匹配</text>
+      <text x="580" y="52" text-anchor="middle" font-size="15" fill="var(--accent-ink)" font-weight="800">底盘深 + 扩张 ← 最匹配</text>
       <text x="240" y="340" text-anchor="middle" font-size="12" fill="#4a4540" font-weight="600">底盘薄 + 停滞</text>
       <text x="580" y="340" text-anchor="middle" font-size="12" fill="#4a4540" font-weight="600">底盘深但成熟</text>
       <line x1="70" y1="350" x2="750" y2="350" stroke="#2a2a26" stroke-width="1.5"/>
@@ -736,47 +1197,47 @@ body.editing .zoom-btn { display: none; }
         <text x="62" y="345" text-anchor="end">-3%</text>
       </g>
       <text x="26" y="190" text-anchor="middle" font-size="13" font-weight="700" fill="#14140f" transform="rotate(-90 26 190)">5年平均增速 →</text>
-      <line x1="666" y1="30" x2="666" y2="350" stroke="#d91e18" stroke-dasharray="5 4" stroke-width="1.5" opacity=".6"/>
-      <circle cx="666" cy="137" r="13" fill="#d91e18" stroke="#8a0a05" stroke-width="2"/>
-      <text x="666" y="141" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">中国</text>
-      <text x="666" y="22" text-anchor="middle" font-size="10.5" fill="#d91e18" font-weight="700">参照标杆</text>
-      <circle cx="580" cy="94" r="22" fill="#2a9d6a" fill-opacity=".9" stroke="#0a3a1e" stroke-width="2.5"/>
-      <text x="580" y="98" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">越南</text>
-      <circle cx="608" cy="286" r="13" fill="#a8a090" fill-opacity=".8" stroke="#4a4540" stroke-width="1.5"/>
-      <text x="608" y="290" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">泰国</text>
-      <circle cx="552" cy="254" r="13" fill="#a8a090" fill-opacity=".8" stroke="#4a4540" stroke-width="1.5"/>
-      <text x="552" y="258" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">马来</text>
-      <circle cx="438" cy="286" r="12" fill="#a8a090" fill-opacity=".8" stroke="#4a4540" stroke-width="1.5"/>
-      <text x="438" y="290" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">墨西哥</text>
-      <circle cx="410" cy="222" r="13" fill="#d48a35" fill-opacity=".8" stroke="#8a4f15" stroke-width="1.5"/>
-      <text x="410" y="226" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">印尼</text>
-      <circle cx="380" cy="222" r="11" fill="#d48a35" fill-opacity=".75" stroke="#8a4f15" stroke-width="1.5"/>
-      <text x="380" y="226" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">菲律宾</text>
-      <circle cx="268" cy="190" r="14" fill="#6a88b0" fill-opacity=".85" stroke="#2a3850" stroke-width="1.5"/>
-      <text x="268" y="194" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">印度</text>
-      <circle cx="240" cy="222" r="11" fill="#6a88b0" fill-opacity=".75" stroke="#2a3850" stroke-width="1.5"/>
-      <text x="240" y="226" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">沙特</text>
-      <circle cx="240" cy="270" r="10" fill="#a82a0a" fill-opacity=".7" stroke="#4a1008" stroke-width="1.5"/>
-      <text x="240" y="290" text-anchor="middle" font-size="10" fill="#a82a0a" font-weight="600">尼日利亚</text>
-      <circle cx="185" cy="270" r="11" fill="#a82a0a" fill-opacity=".7" stroke="#4a1008" stroke-width="1.5"/>
-      <text x="185" y="290" text-anchor="middle" font-size="10" fill="#a82a0a" font-weight="600">巴西</text>
-      <circle cx="127" cy="222" r="9" fill="#a8a090" fill-opacity=".6" stroke="#6a6458" stroke-width="1"/>
-      <text x="127" y="240" text-anchor="middle" font-size="10" fill="#4a4540">肯尼亚</text>
+      <line x1="605" y1="30" x2="605" y2="350" stroke="var(--accent)" stroke-dasharray="5 4" stroke-width="1.5" opacity=".6"/>
+      <circle cx="605" cy="128" r="13" fill="var(--accent)" stroke="#8a0a05" stroke-width="2"/>
+      <text x="605" y="132" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">中国</text>
+      <text x="605" y="22" text-anchor="middle" font-size="10.5" fill="var(--accent)" font-weight="700">参照标杆</text>
+      <circle cx="580" cy="102" r="22" fill="#1f3b6d" fill-opacity=".9" stroke="var(--accent-ink)" stroke-width="2.5"/>
+      <text x="580" y="106" text-anchor="middle" font-size="13" fill="#fff" font-weight="700">越南</text>
+      <circle cx="608" cy="301" r="13" fill="#a8a090" fill-opacity=".8" stroke="#4a4540" stroke-width="1.5"/>
+      <text x="608" y="305" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">泰国</text>
+      <circle cx="523" cy="179" r="13" fill="#a8a090" fill-opacity=".8" stroke="#4a4540" stroke-width="1.5"/>
+      <text x="523" y="183" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">马来</text>
+      <circle cx="461" cy="244" r="12" fill="#a8a090" fill-opacity=".8" stroke="#4a4540" stroke-width="1.5"/>
+      <text x="461" y="248" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">墨西哥</text>
+      <circle cx="438" cy="177" r="13" fill="#506680" fill-opacity=".8" stroke="#39495c" stroke-width="1.5"/>
+      <text x="438" y="181" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">印尼</text>
+      <circle cx="344" cy="202" r="11" fill="#506680" fill-opacity=".75" stroke="#39495c" stroke-width="1.5"/>
+      <text x="344" y="206" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">菲律宾</text>
+      <circle cx="268" cy="153" r="14" fill="#98a8b8" fill-opacity=".85" stroke="#5b6a79" stroke-width="1.5"/>
+      <text x="268" y="157" text-anchor="middle" font-size="11.5" fill="#fff" font-weight="700">印度</text>
+      <circle cx="345" cy="169" r="11" fill="#98a8b8" fill-opacity=".75" stroke="#5b6a79" stroke-width="1.5"/>
+      <text x="345" y="173" text-anchor="middle" font-size="10.5" fill="#fff" font-weight="700">沙特</text>
+      <circle cx="145" cy="325" r="10" fill="#a82a0a" fill-opacity=".7" stroke="#4a1008" stroke-width="1.5"/>
+      <text x="145" y="343" text-anchor="middle" font-size="10" fill="#a82a0a" font-weight="600">尼日利亚</text>
+      <circle cx="243" cy="273" r="11" fill="#a82a0a" fill-opacity=".7" stroke="#4a1008" stroke-width="1.5"/>
+      <text x="243" y="291" text-anchor="middle" font-size="10" fill="#a82a0a" font-weight="600">巴西</text>
+      <circle cx="98" cy="202" r="9" fill="#a8a090" fill-opacity=".6" stroke="#6a6458" stroke-width="1"/>
+      <text x="98" y="220" text-anchor="middle" font-size="10" fill="#4a4540">肯尼亚</text>
     </svg>
 
     <div class="chart-legend">
       <span class="lg-title">图例：</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#d91e18"></span>中国（参照标杆）</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#2a9d6a"></span>推荐主攻</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#d48a35"></span>底盘中等 / 增速中等</span>
-      <span class="lg-item"><span class="lg-dot" style="background:#6a88b0"></span>底盘偏薄</span>
+      <span class="lg-item"><span class="lg-dot" style="background:var(--accent)"></span>中国（参照标杆）</span>
+      <span class="lg-item"><span class="lg-dot" style="background:#1f3b6d"></span>推荐主攻</span>
+      <span class="lg-item"><span class="lg-dot" style="background:#506680"></span>底盘中等 / 增速中等</span>
+      <span class="lg-item"><span class="lg-dot" style="background:#98a8b8"></span>底盘偏薄</span>
       <span class="lg-item"><span class="lg-dot" style="background:#a8a090"></span>底盘深但增速放缓</span>
       <span class="lg-item"><span class="lg-dot" style="background:#a82a0a"></span>底盘薄 + 停滞</span>
       <span class="lg-note">圆圈大小仅为视觉标识，不承载数据含义。</span>
     </div>
 
     <div class="mk-source">
-      <strong>来源：</strong>World Bank National Accounts Data（Manufacturing value added % of GDP，最新可得 2022-2023）；增速为 2018-2023 区间估算，沙特为非石油制造业。
+      <strong>来源：</strong>World Bank National Accounts Data（Manufacturing value added % of GDP，最新可得 2024 或最近非空年份）；5 年平均增速按 World Bank 制造业实际增速口径重算；沙特改为与其他国家一致的制造业总口径。
     </div>
   </div>
 
@@ -785,15 +1246,15 @@ body.editing .zoom-btn { display: none; }
     <div class="mk-subtitle">云计算市场年复合增速（企业数字化/AI 采纳速度的 proxy），绝对值不与中国比较</div>
 
     <div style="margin-top:12px">
-      <div class="hbar-row cn-ref"><div class="hbar-label">中国 参照</div><div class="hbar-track"><div class="hbar-fill" style="width:50%;background:#d91e18"></div></div><div class="hbar-val">~15%</div></div>
-      <div class="hbar-row"><div class="hbar-label hi">印度</div><div class="hbar-track"><div class="hbar-fill" style="width:95%;background:#2a9d6a"></div></div><div class="hbar-val hi">~25-30%</div></div>
-      <div class="hbar-row"><div class="hbar-label hi">印尼</div><div class="hbar-track"><div class="hbar-fill" style="width:85%;background:#2a9d6a"></div></div><div class="hbar-val hi">~25%</div></div>
-      <div class="hbar-row"><div class="hbar-label hi">越南</div><div class="hbar-track"><div class="hbar-fill" style="width:85%;background:#2a9d6a"></div></div><div class="hbar-val hi">~25%</div></div>
-      <div class="hbar-row"><div class="hbar-label hi">沙特</div><div class="hbar-track"><div class="hbar-fill" style="width:85%;background:#2a9d6a"></div></div><div class="hbar-val hi">~25%</div></div>
-      <div class="hbar-row"><div class="hbar-label">菲律宾</div><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:#d48a35"></div></div><div class="hbar-val">~15-20%</div></div>
-      <div class="hbar-row"><div class="hbar-label">泰国</div><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:#d48a35"></div></div><div class="hbar-val">~15-20%</div></div>
-      <div class="hbar-row"><div class="hbar-label">马来西亚</div><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:#d48a35"></div></div><div class="hbar-val">~15-20%</div></div>
-      <div class="hbar-row"><div class="hbar-label">墨西哥</div><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:#d48a35"></div></div><div class="hbar-val">~15-20%</div></div>
+      <div class="hbar-row cn-ref"><div class="hbar-label">中国 参照</div><div class="hbar-track"><div class="hbar-fill" style="width:50%;background:var(--accent)"></div></div><div class="hbar-val">~15%</div></div>
+      <div class="hbar-row"><div class="hbar-label hi">印度</div><div class="hbar-track"><div class="hbar-fill" style="width:95%;background:#1f3b6d"></div></div><div class="hbar-val hi">~25-30%</div></div>
+      <div class="hbar-row"><div class="hbar-label hi">印尼</div><div class="hbar-track"><div class="hbar-fill" style="width:85%;background:#1f3b6d"></div></div><div class="hbar-val hi">~25%</div></div>
+      <div class="hbar-row"><div class="hbar-label hi">越南</div><div class="hbar-track"><div class="hbar-fill" style="width:85%;background:#1f3b6d"></div></div><div class="hbar-val hi">~25%</div></div>
+      <div class="hbar-row"><div class="hbar-label hi">沙特</div><div class="hbar-track"><div class="hbar-fill" style="width:85%;background:#1f3b6d"></div></div><div class="hbar-val hi">~25%</div></div>
+      <div class="hbar-row"><div class="hbar-label">菲律宾</div><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:#506680"></div></div><div class="hbar-val">~15-20%</div></div>
+      <div class="hbar-row"><div class="hbar-label">泰国</div><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:#506680"></div></div><div class="hbar-val">~15-20%</div></div>
+      <div class="hbar-row"><div class="hbar-label">马来西亚</div><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:#506680"></div></div><div class="hbar-val">~15-20%</div></div>
+      <div class="hbar-row"><div class="hbar-label">墨西哥</div><div class="hbar-track"><div class="hbar-fill" style="width:60%;background:#506680"></div></div><div class="hbar-val">~15-20%</div></div>
       <div class="hbar-row"><div class="hbar-label">巴西</div><div class="hbar-track"><div class="hbar-fill" style="width:50%;background:#a8a090"></div></div><div class="hbar-val">~15%</div></div>
     </div>
 
@@ -807,16 +1268,16 @@ body.editing .zoom-btn { display: none; }
     <div class="mk-subtitle">印度体量最大，墨西哥/越南增速最快</div>
 
     <div style="margin-top:12px">
-      <div class="hbar-row cn-ref"><div class="hbar-label">中国 参照</div><div class="hbar-track"><div class="hbar-fill" style="width:100%;background:#d91e18"></div></div><div class="hbar-val">$2万亿+ / ~8%</div></div>
-      <div class="hbar-row"><div class="hbar-label">印度</div><div class="hbar-track"><div class="hbar-fill" style="width:95%;background:#2a3850"></div></div><div class="hbar-val">$1000亿+ / ~18%</div></div>
-      <div class="hbar-row"><div class="hbar-label">印尼</div><div class="hbar-track"><div class="hbar-fill" style="width:75%;background:#2a3850"></div></div><div class="hbar-val">$600亿+ / ~15%</div></div>
-      <div class="hbar-row"><div class="hbar-label">巴西</div><div class="hbar-track"><div class="hbar-fill" style="width:65%;background:#2a3850"></div></div><div class="hbar-val">$500亿+ / ~12%</div></div>
-      <div class="hbar-row"><div class="hbar-label mid">墨西哥</div><div class="hbar-track"><div class="hbar-fill" style="width:55%;background:#d48a35"></div></div><div class="hbar-val mid">$400亿+ / ~30%</div></div>
-      <div class="hbar-row"><div class="hbar-label mid">越南</div><div class="hbar-track"><div class="hbar-fill" style="width:40%;background:#d48a35"></div></div><div class="hbar-val mid">$250亿+ / ~25%</div></div>
-      <div class="hbar-row"><div class="hbar-label">泰国</div><div class="hbar-track"><div class="hbar-fill" style="width:40%;background:#6a88b0"></div></div><div class="hbar-val">$250亿+ / ~10%</div></div>
-      <div class="hbar-row"><div class="hbar-label">菲律宾</div><div class="hbar-track"><div class="hbar-fill" style="width:28%;background:#6a88b0"></div></div><div class="hbar-val">$150亿+ / ~20%</div></div>
-      <div class="hbar-row"><div class="hbar-label">沙特</div><div class="hbar-track"><div class="hbar-fill" style="width:25%;background:#6a88b0"></div></div><div class="hbar-val">$130亿+ / ~15%</div></div>
-      <div class="hbar-row"><div class="hbar-label">马来西亚</div><div class="hbar-track"><div class="hbar-fill" style="width:25%;background:#6a88b0"></div></div><div class="hbar-val">$130亿+ / ~10%</div></div>
+      <div class="hbar-row cn-ref"><div class="hbar-label">中国 参照</div><div class="hbar-track"><div class="hbar-fill" style="width:100%;background:var(--accent)"></div></div><div class="hbar-val">$2万亿+ / ~8%</div></div>
+      <div class="hbar-row"><div class="hbar-label">印度</div><div class="hbar-track"><div class="hbar-fill" style="width:95%;background:#5b6a79"></div></div><div class="hbar-val">$1000亿+ / ~18%</div></div>
+      <div class="hbar-row"><div class="hbar-label">印尼</div><div class="hbar-track"><div class="hbar-fill" style="width:75%;background:#5b6a79"></div></div><div class="hbar-val">$600亿+ / ~15%</div></div>
+      <div class="hbar-row"><div class="hbar-label">巴西</div><div class="hbar-track"><div class="hbar-fill" style="width:65%;background:#5b6a79"></div></div><div class="hbar-val">$500亿+ / ~12%</div></div>
+      <div class="hbar-row"><div class="hbar-label mid">墨西哥</div><div class="hbar-track"><div class="hbar-fill" style="width:55%;background:#506680"></div></div><div class="hbar-val mid">$400亿+ / ~30%</div></div>
+      <div class="hbar-row"><div class="hbar-label mid">越南</div><div class="hbar-track"><div class="hbar-fill" style="width:40%;background:#506680"></div></div><div class="hbar-val mid">$250亿+ / ~25%</div></div>
+      <div class="hbar-row"><div class="hbar-label">泰国</div><div class="hbar-track"><div class="hbar-fill" style="width:40%;background:#98a8b8"></div></div><div class="hbar-val">$250亿+ / ~10%</div></div>
+      <div class="hbar-row"><div class="hbar-label">菲律宾</div><div class="hbar-track"><div class="hbar-fill" style="width:28%;background:#98a8b8"></div></div><div class="hbar-val">$150亿+ / ~20%</div></div>
+      <div class="hbar-row"><div class="hbar-label">沙特</div><div class="hbar-track"><div class="hbar-fill" style="width:25%;background:#98a8b8"></div></div><div class="hbar-val">$130亿+ / ~15%</div></div>
+      <div class="hbar-row"><div class="hbar-label">马来西亚</div><div class="hbar-track"><div class="hbar-fill" style="width:25%;background:#98a8b8"></div></div><div class="hbar-val">$130亿+ / ~10%</div></div>
     </div>
 
     <div class="mk-source">
@@ -920,7 +1381,7 @@ body.editing .zoom-btn { display: none; }
     </table>
 
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid #e0d8c8;font-size:12px;color:#4a4540;align-items:center">
-      <span style="font-weight:700;color:#14140f">图例：</span>
+      <span style="font-weight:700;color:var(--ink)">图例：</span>
       <span style="display:flex;align-items:center;gap:5px"><svg class="hb" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#14140f"/></svg>强</span>
       <span style="display:flex;align-items:center;gap:5px"><svg class="hb" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="#14140f" stroke-width="1.2"/><path d="M 10 2 A 8 8 0 0 1 10 18 L 10 10 Z" fill="#14140f"/></svg>中高</span>
       <span style="display:flex;align-items:center;gap:5px"><svg class="hb" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="#14140f" stroke-width="1.2"/><path d="M 10 10 L 10 2 A 8 8 0 0 1 18 10 Z" fill="#14140f"/></svg>中/弱</span>
@@ -937,6 +1398,91 @@ body.editing .zoom-btn { display: none; }
   </div>
 </div>
 
+<div class="section" id="sec-vietnam-landing">
+  <div class="filter-step">
+    <div class="step-num">★</div>
+    <div>
+      <div class="step-text">越南 · 落地要点与机会放大器</div>
+      <div class="step-sub">以 HCMC 为代表的城市级结构特征 — 从"市场存在"到"产品怎么切入"</div>
+    </div>
+  </div>
+
+  <p class="sec-body">回答“到越南哪里 ROI 最高”：以 HCMC 为例，拥堵与运力碎片化越高，调度与信息层价值越大。</p>
+
+  <div class="mk-chart">
+    <div class="mk-action">机会放大器 ① · 摩托车主导的碎片化运力结构</div>
+    <div class="mk-subtitle">通用 WMS/TMS 默认"卡车干线 + 厢货末端"，但越南最后一公里是摩托队——调度颗粒度和轨迹数据完全不同</div>
+
+    <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px">
+      <div style="background:var(--surface-2);border-radius:8px;padding:13px 16px;border-left:3px solid var(--accent)">
+        <div style="font-size:12.5px;font-weight:700;color:var(--accent-ink);letter-spacing:.04em;margin-bottom:5px">事实</div>
+        <div style="font-size:14px;color:var(--ink-2);line-height:1.65">越南家庭摩托车使用率 <strong>89.4%</strong>（GSO 2024）；全国注册摩托约 <strong>7,400 万辆</strong>、人口 1.01 亿；HCMC 登记车辆超 <strong>1,000 万</strong>，为 900 万常住居民服务。更稳妥的口径是：<strong>全国家庭私家车使用率仅 9%</strong>，9 座及以下汽车约 <strong>34 辆/千人</strong>。</div>
+      </div>
+      <div style="background:var(--surface-2);border-radius:8px;padding:13px 16px;border-left:3px solid var(--accent)">
+        <div style="font-size:12.5px;font-weight:700;color:var(--accent-ink);letter-spacing:.04em;margin-bottom:5px">产品含义</div>
+        <div style="font-size:14px;color:var(--ink-2);line-height:1.65">最后一公里是<strong>摩托车为主 + 混合车型</strong>的模式。中国在<strong>摩托/小型货车混编调度、动态路线、骑手画像、ARPU 分层</strong>上已有成熟打法（菜鸟、极兔、顺丰同城），可直接迁移——这正是欧美 TMS 做不到的能力切面。</div>
+      </div>
+    </div>
+
+    <div class="mk-source">
+      <strong>来源：</strong>GSO Vietnam 2024 中期人口住房调查；Vietnam Register 2024 年注册数据；Mordor Intelligence Vietnam Two-Wheeler Market 2025。
+    </div>
+  </div>
+
+  <div class="mk-chart">
+    <div class="mk-action">机会放大器 ② · 拥堵强度让调度软件进入高 ROI 区间</div>
+    <div class="mk-subtitle">拥堵越严重，每一次"少等一个灯"的货币化价值越高——这正是 TMS/动态路径产品的核心价值点</div>
+
+    <div style="margin-top:14px">
+      <div class="hbar-row cn-ref"><div class="hbar-label">官方拥堵阈值</div><div class="hbar-track"><div class="hbar-fill" style="width:7%;background:var(--accent)"></div></div><div class="hbar-val">&lt;5 km/h</div></div>
+      <div class="hbar-row"><div class="hbar-label hi">HCMC 晚高峰</div><div class="hbar-track"><div class="hbar-fill" style="width:20%;background:var(--accent-ink)"></div></div><div class="hbar-val hi">14.8 km/h</div></div>
+      <div class="hbar-row"><div class="hbar-label hi">HCMC 早高峰</div><div class="hbar-track"><div class="hbar-fill" style="width:25%;background:var(--accent-ink)"></div></div><div class="hbar-val hi">17 km/h</div></div>
+      <div class="hbar-row"><div class="hbar-label">HCMC 全天均值</div><div class="hbar-track"><div class="hbar-fill" style="width:42%;background:#1f3b6d"></div></div><div class="hbar-val">34.9 km/h</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:16px">
+      <div style="background:var(--surface-2);border-radius:8px;padding:12px 16px">
+        <div style="font-size:13.5px;color:var(--ink-2);line-height:1.6"><strong style="color:var(--accent-ink)">拥堵量级：</strong>TomTom 口径下，HCMC 司机 2025 年高峰期年均损失 <strong>127 小时 ≈ 5 天 7 小时</strong>；另据 HCMC 建设厅公开表述，近期交通拥堵较上年同期约 <strong>+24%</strong>。两者口径不同，但方向一致：拥堵在加重。</div>
+      </div>
+      <div style="background:var(--surface-2);border-radius:8px;padding:12px 16px">
+        <div style="font-size:13.5px;color:var(--ink-2);line-height:1.6"><strong style="color:var(--accent-ink)">机会点：</strong>拥堵呈趋势性恶化（不是周期性）→ <strong>动态路径规划、时间窗调度、实时交通嵌入</strong>的产品价值被基础面持续放大。中国在高密度城市调度的算法积累（百度/高德数据 + 同城即时配送）可直接做产品卖点。</div>
+      </div>
+    </div>
+
+    <div class="mk-source">
+      <strong>来源：</strong>TomTom Traffic Index 2025（HCMC metro 区域）；HCMC 建设厅 2025 年交通运行通报；Tuoi Tre News 2025 报道。
+    </div>
+  </div>
+
+  <div class="mk-chart">
+    <div class="mk-action">机会放大器 ③ · 产业外溢 + 数字化拐点的三重叠加</div>
+    <div class="mk-subtitle">客户（中国系制造）· 运力层（中国物流触角）· 数字化需求（云增速 25%）三者在 HCMC / 胡志明 - 海防轴线汇合</div>
+
+    <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px">
+      <div style="background:var(--surface-2);border-radius:8px;padding:13px 16px;border-left:3px solid var(--accent)">
+        <div style="font-size:12.5px;font-weight:700;color:var(--accent-ink);letter-spacing:.04em;margin-bottom:5px">客户侧 · 中资制造集群</div>
+        <div style="font-size:14px;color:var(--ink-2);line-height:1.65">中国对越 FDI 2024 年 <strong>$47.3 亿</strong>（越方口径）；BOE、立讯、歌尔、舜宇等 Apple/Samsung 供应商已落地，三星越南出口额 <strong>$550 亿</strong>（占越南电子出口近一半）——<strong>客户是已习惯中国 IT 供应商的企业</strong>，销售摩擦显著低于本地原生客户。</div>
+      </div>
+      <div style="background:var(--surface-2);border-radius:8px;padding:13px 16px;border-left:3px solid var(--accent)">
+        <div style="font-size:12.5px;font-weight:700;color:var(--accent-ink);letter-spacing:.04em;margin-bottom:5px">运力侧 · 中国物流触角</div>
+        <div style="font-size:14px;color:var(--ink-2);line-height:1.65">极兔（J&amp;T）越南已是头部快递之一；菜鸟、京东物流在 HCMC / 海防布有网点；顺丰同城已验证东南亚落地——运力层和软件层可<strong>共栈推进</strong>（软件对接自家运力可以做"样板间"，再开放给本地 3PL）。</div>
+      </div>
+      <div style="background:var(--surface-2);border-radius:8px;padding:13px 16px;border-left:3px solid var(--accent)">
+        <div style="font-size:12.5px;font-weight:700;color:var(--accent-ink);letter-spacing:.04em;margin-bottom:5px">数字化侧 · 拐点信号明确</div>
+        <div style="font-size:14px;color:var(--ink-2);line-height:1.65">越南云计算市场年增速 <strong>~25%</strong>（第 3 层数据）；地铁 1 号线 2024 通车 → 混合出行模式 + 多式联运协调需求上升；家庭轿车拥有率 3 年从 5.7% → 9%（<strong>+60%</strong>），意味着<strong>车型结构复杂化</strong>，调度软件从"单一摩托队"走向"多车型协同"，产品层次更丰富。</div>
+      </div>
+    </div>
+
+    <div class="mk-source">
+      <strong>来源：</strong>越南统计总局 GSO 2024 · 中国商务部越南国别报告 · 三星越南官网披露 · IDC/Gartner 东南亚云市场报告 · Vietnam News 2025。
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>落地要点总结：</strong>越南不是"在一个便宜市场卖通用产品"，而是<strong>"在一个高密度、摩托主导、拥堵持续恶化、中资客户集中的市场，卖中国打磨过的高阶能力"</strong>。产品定义建议：以 <em>HCMC 为第一落地城市</em>，以 <em>中资制造厂仓-城配-末端</em> 为第一条业务线，以 <em>极兔/菜鸟自家运力</em> 为样板间，第一年打透一个业务闭环。
+  </div>
+</div>
+
 </div>
 
 <div class="tab-pane" id="pane-B">
@@ -944,9 +1490,9 @@ body.editing .zoom-btn { display: none; }
 <div class="section" style="padding-top:12px">
   <p class="sec-label">垂直领域路径 · 方法论</p>
   <h2 class="sec-title">为什么需要一条独立路径？</h2>
-  <p class="sec-body">综合市场路径筛选的是"通用物流科技市场"。但有些国家在通用筛选中被排除（如肯尼亚 LPI 极低、集团资源空白），却在<strong>特定垂直场景</strong>中有显著机会。垂直路径的产品形态、客户画像、组织设计都与综合市场路径不同，不应混入一起排序。</p>
+  <p class="sec-body">综合路径看通用市场；垂直路径抓特定场景（如肯尼亚冷链）。产品/客户/组织不同，需要独立排序。</p>
 
-  <h3 style="font-size:18px;font-weight:700;margin:24px 0 10px;color:#14140f">高价值垂直领域全景</h3>
+  <h3 style="font-size:18px;font-weight:700;margin:24px 0 10px;color:var(--ink)">高价值垂直领域全景</h3>
 
   <div class="mk-chart">
     <div class="mk-action">六大垂直领域 — 本报告深度展开第一个作为示范</div>
@@ -957,10 +1503,10 @@ body.editing .zoom-btn { display: none; }
         <tr><th style="width:28%">垂直领域</th><th>核心问题</th><th>付费方</th><th class="c" style="width:16%">状态</th></tr>
       </thead>
       <tbody>
-        <tr style="background:#fdf5ea">
-          <td class="cn" style="color:#8a4f15">农产品出口冷链</td>
+        <tr style="background:var(--surface-2)">
+          <td class="cn" style="color:var(--path-b-ink)">农产品出口冷链</td>
           <td>产后损耗率 30-50%</td>
-          <td>欧盟/美国终端超市</td>
+          <td>本地出口商 / packhouse / 国际采购商</td>
           <td class="c mid">深度案例 ↓</td>
         </tr>
         <tr>
@@ -1002,8 +1548,8 @@ body.editing .zoom-btn { display: none; }
   <div class="filter-step B">
     <div class="step-num">K</div>
     <div>
-      <div class="step-text">深度案例：肯尼亚出口农业冷链</div>
-      <div class="step-sub">四步推导：损耗排序 → 出口导向 → 落地前例 → 产品形态</div>
+      <div class="step-text">深度案例：肯尼亚 — 两步走的结构性机会</div>
+      <div class="step-sub">第一步（现在）· 出口型鲜活冷链 ｜ 长期布局 · 人口红利 + 高恩格尔系数下的国内食品链效率提升</div>
     </div>
   </div>
 
@@ -1012,12 +1558,12 @@ body.editing .zoom-btn { display: none; }
     <div class="mk-subtitle">新鲜蔬果/花卉采收到零售间的损失比例，FAO 和专题研究综合区间</div>
 
     <div style="margin-top:12px">
-      <div class="hbar-row cn-ref"><div class="hbar-label">中国 参照</div><div class="hbar-track"><div class="hbar-fill" style="width:20%;background:#d91e18"></div></div><div class="hbar-val">8-12%</div></div>
+      <div class="hbar-row cn-ref"><div class="hbar-label">中国 参照</div><div class="hbar-track"><div class="hbar-fill" style="width:20%;background:var(--accent)"></div></div><div class="hbar-val">8-12%</div></div>
       <div class="hbar-row"><div class="hbar-label" style="color:#a82a0a;font-weight:700">肯尼亚</div><div class="hbar-track"><div class="hbar-fill" style="width:95%;background:#a82a0a"></div></div><div class="hbar-val" style="color:#a82a0a;font-weight:700">40-50%</div></div>
-      <div class="hbar-row"><div class="hbar-label mid">尼日利亚</div><div class="hbar-track"><div class="hbar-fill" style="width:80%;background:#d48a35"></div></div><div class="hbar-val mid">40-50%</div></div>
-      <div class="hbar-row"><div class="hbar-label mid">印度</div><div class="hbar-track"><div class="hbar-fill" style="width:65%;background:#d48a35"></div></div><div class="hbar-val mid">30-40%</div></div>
-      <div class="hbar-row"><div class="hbar-label">菲律宾</div><div class="hbar-track"><div class="hbar-fill" style="width:50%;background:#d4b86e"></div></div><div class="hbar-val">25-30%</div></div>
-      <div class="hbar-row"><div class="hbar-label">印尼</div><div class="hbar-track"><div class="hbar-fill" style="width:45%;background:#d4b86e"></div></div><div class="hbar-val">20-25%</div></div>
+      <div class="hbar-row"><div class="hbar-label mid">尼日利亚</div><div class="hbar-track"><div class="hbar-fill" style="width:80%;background:#506680"></div></div><div class="hbar-val mid">40-50%</div></div>
+      <div class="hbar-row"><div class="hbar-label mid">印度</div><div class="hbar-track"><div class="hbar-fill" style="width:65%;background:#506680"></div></div><div class="hbar-val mid">30-40%</div></div>
+      <div class="hbar-row"><div class="hbar-label">菲律宾</div><div class="hbar-track"><div class="hbar-fill" style="width:50%;background:var(--accent)"></div></div><div class="hbar-val">25-30%</div></div>
+      <div class="hbar-row"><div class="hbar-label">印尼</div><div class="hbar-track"><div class="hbar-fill" style="width:45%;background:var(--accent)"></div></div><div class="hbar-val">20-25%</div></div>
       <div class="hbar-row"><div class="hbar-label">越南</div><div class="hbar-track"><div class="hbar-fill" style="width:35%;background:#a8a090"></div></div><div class="hbar-val">15-20%</div></div>
       <div class="hbar-row"><div class="hbar-label">泰国</div><div class="hbar-track"><div class="hbar-fill" style="width:32%;background:#a8a090"></div></div><div class="hbar-val">15-20%</div></div>
       <div class="hbar-row"><div class="hbar-label">墨/巴</div><div class="hbar-track"><div class="hbar-fill" style="width:28%;background:#a8a090"></div></div><div class="hbar-val">10-15%</div></div>
@@ -1039,7 +1585,7 @@ body.editing .zoom-btn { display: none; }
       </thead>
       <tbody>
         <tr style="background:#dff0e5">
-          <td class="cn" style="color:#0a3a1e">肯尼亚</td>
+          <td class="cn" style="color:var(--accent-ink)">肯尼亚</td>
           <td>切花出口欧盟最大供应国之一（全球前 3-5）；蔬菜、牛油果出口欧盟</td>
           <td class="c hi">强</td>
         </tr>
@@ -1068,15 +1614,15 @@ body.editing .zoom-btn { display: none; }
     <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px">
       <div style="background:#f5f2ec;border-radius:8px;padding:14px 16px">
         <div style="font-size:11px;font-weight:700;color:#6a6458;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">M-Pesa 规模</div>
-        <div style="font-size:14px;color:#1a1a15;line-height:1.6">活跃用户 <strong>3000 万+</strong>（覆盖肯尼亚绝大部分成年人）；年交易额占 GDP 相当大比例（多源估算 50%+）。</div>
+        <div style="font-size:14px;color:var(--ink);line-height:1.6">活跃用户 <strong>3000 万+</strong>（覆盖肯尼亚绝大部分成年人）；年交易额占 GDP 相当大比例（多源估算 50%+）。</div>
       </div>
       <div style="background:#f5f2ec;border-radius:8px;padding:14px 16px">
         <div style="font-size:11px;font-weight:700;color:#6a6458;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">边界 ①（重要）</div>
-        <div style="font-size:14px;color:#1a1a15;line-height:1.6">损耗主因仍是冷链设施缺失+物理损伤。<strong>数字化只能解决信息不对称引起的那部分</strong>（盲目采收、多次暴露、协调缺失），业内常引用 20-30% 区间，<strong>无严格量化来源</strong>。</div>
+        <div style="font-size:14px;color:var(--ink);line-height:1.6">损耗主因仍是冷链设施缺失+物理损伤。<strong>数字化只能解决信息不对称引起的那部分</strong>（盲目采收、多次暴露、协调缺失），业内常引用 20-30% 区间，<strong>无严格量化来源</strong>。</div>
       </div>
       <div style="background:#f5f2ec;border-radius:8px;padding:14px 16px">
         <div style="font-size:11px;font-weight:700;color:#6a6458;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">边界 ②</div>
-        <div style="font-size:14px;color:#1a1a15;line-height:1.6">非通用市场。肯尼亚大型花卉/蔬菜出口商<strong>约 100-200 家</strong>（行业估）。ARPU 高，客户池天花板低。</div>
+        <div style="font-size:14px;color:var(--ink);line-height:1.6">非通用市场。肯尼亚大型花卉/蔬菜出口商<strong>约 100-200 家</strong>（行业估）。ARPU 高，客户池天花板低。</div>
       </div>
     </div>
 
@@ -1086,8 +1632,35 @@ body.editing .zoom-btn { display: none; }
   </div>
 
   <div class="insight amber">
-    <strong>推导④ 产品结论：</strong>做"出口冷链协调平台"（IoT 传感器 + 轻量移动端），<strong>不是</strong>通用 WMS/TMS。客户是 100-200 家大型出口商 + 国际采购商，<strong>不是</strong>东南亚的中型制造企业。独立产品、独立客户、独立组织。
+    <strong>推导④ 第一步产品结论：</strong>做"出口冷链协调平台"（IoT 传感器 + 轻量移动端），<strong>不是</strong>通用 WMS/TMS。核心客户是 100-200 家大型出口商 / packhouse / 协调方，国际采购商更多提供 SLA 与合规约束，<strong>不是</strong>东南亚的中型制造企业。独立产品、独立客户、独立组织。
   </div>
+
+  <div class="mk-chart" style="background:var(--surface-2);border-color:var(--line)">
+    <div class="mk-action" style="border-left-color:var(--path-b-ink)">长期布局 · 人口红利 + 高恩格尔系数 = 国内食品链效率提升的结构性窗口</div>
+    <div class="mk-subtitle">第一步的技术栈在 5-10 年后平移复用到国内市场——不是切换赛道，是同一产品骨架的场景扩展</div>
+
+    <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:14px">
+      <div style="background:#fff;border-radius:8px;padding:14px 18px;border-left:3px solid var(--accent)">
+        <div style="font-size:13px;font-weight:700;color:var(--path-b-ink);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">人口结构 · 需求端</div>
+        <div style="font-size:14px;color:var(--ink-2);line-height:1.65">人口约 <strong>5,600 万</strong>、年增速 <strong>2%+</strong>、中位年龄仅 <strong>20 岁</strong>（UN Population 2024）——撒哈拉以南非洲最年轻、增长最稳的经济体之一。城镇化率 <strong>31.9%</strong> 仍在快速上升通道，内罗毕都会区已超 <strong>550 万</strong>人口。这意味着未来 10 年生鲜 / 加工食品的消费总量是结构性扩张，而不是短期波动。</div>
+      </div>
+      <div style="background:#fff;border-radius:8px;padding:14px 18px;border-left:3px solid var(--accent)">
+        <div style="font-size:13px;font-weight:700;color:var(--path-b-ink);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">恩格尔系数 · 购买力方向</div>
+        <div style="font-size:14px;color:var(--ink-2);line-height:1.65">家庭支出中食品占比 <strong>40%+</strong>（KNBS Household Budget Survey 2022；对比中国城镇 ~30%、美国 ~10%）。食品链效率改善更容易转化为<strong>终端价格、供给稳定性和零售毛利</strong>的改善。当现代渠道（Naivas、Carrefour 等）持续下沉时，需求驱动有机会从"政府补贴"逐步转向"零售商 / 加工企业"——这更接近冷链数字化产品可服务的买方画像。</div>
+      </div>
+      <div style="background:#fff;border-radius:8px;padding:14px 18px;border-left:3px solid var(--accent)">
+        <div style="font-size:13px;font-weight:700;color:var(--path-b-ink);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">能力平移 · 技术栈复用</div>
+        <div style="font-size:14px;color:var(--ink-2);line-height:1.65">第一步沉淀的温控 IoT、多点调度、可追溯、票据电子化四大能力，<strong>直接复用到国内生鲜分销、加工厂入库、现代零售履约</strong>。切换的是场景（出口口岸 → 批发市场/加工厂），<strong>不切换产品骨架</strong>。同期 M-Pesa + 智能手机渗透持续走高，轻量移动端路线已被验证。</div>
+      </div>
+    </div>
+
+    <div class="mk-source">
+      <strong>来源：</strong>UN Population Division 2024 · World Bank WDI（城镇化率、人口增长率）· KNBS Kenya National Bureau of Statistics Household Budget Survey 2022 · FAO Food Balance Sheets。
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>两步走的战略意义：</strong>第一步（出口冷链）提供<strong>现金流 + 合规样板 + 本地运营基础</strong>，解决"进入非洲市场"的冷启动问题；长期布局（国内食品链）提供<strong>可扩展的客户基数</strong>，解决"规模上限"问题。两步共享同一个产品内核与同一支团队，不是两个独立赌注，而是<strong>有先后顺序的结构性布局</strong>。</div>
 </div>
 
 </div>
@@ -1106,7 +1679,10 @@ body.editing .zoom-btn { display: none; }
       </div>
       <div class="rec-type">综合市场能力溢出套利 · 主攻</div>
       <div class="rec-thesis">
-        <em>中国产业外溢 + 中国供应链能力</em>两股力量正在越南交汇。2024 年中国对越 FDI 达 <strong>47.3 亿美元</strong>（越方口径），BOE、立讯、歌尔等 Apple/Samsung 供应商自 2018 年起扩张当地产能；三星在越南出口额约 <strong>550 亿美元</strong>，占越南电子出口近一半。同期极兔、菜鸟、京东物流等已在东南亚完成规模验证。本报告四层筛选中越南是<strong>三条件同时达标、且内部资源可支撑的市场</strong>——当中国制造客户、中国物流基础设施、本地数字化拐点在一个国家汇合，窗口是现在。
+        <em>中国产业外溢 + 中国供应链能力</em>两股力量正在越南交汇——制造客户、物流基础设施、本地数字化拐点在同一个国家汇合。<button type="button" class="inline-more" data-expand-target="thesis-vn">支撑数据</button>
+        <div class="inline-expand" id="thesis-vn" hidden>
+          2024 年中国对越 FDI <strong>$47.3 亿</strong>（越方口径）；BOE、立讯、歌尔等 Apple/Samsung 供应商 2018 年起扩张当地产能；三星越南出口额 <strong>$550 亿</strong>（占越南电子出口近一半）。同期极兔、菜鸟、京东物流等已在东南亚完成规模验证。本报告四层筛选中越南是<strong>三条件同时达标、且内部资源可支撑</strong>的市场，窗口是现在。
+        </div>
       </div>
     </div>
 
@@ -1115,14 +1691,30 @@ body.editing .zoom-btn { display: none; }
         <span class="rec-badge">路径 2</span>
         <span class="rec-country">肯尼亚</span>
       </div>
-      <div class="rec-type">出口农业冷链 · 方法论示范</div>
+      <div class="rec-type">垂直领域 · 分两步走的结构性机会</div>
       <div class="rec-thesis">
-        <em>付费方在海外、问题在本地</em>的垂直机会。肯尼亚玫瑰供应欧盟市场约 <strong>40%</strong>，付费方是欧盟大型采购商和 Oserian、Sian Roses 等大型出口商——他们<strong>已有自建冷库</strong>，真正卡脖子的是<strong>产地到内罗毕机场这最后一段</strong>：48 小时温控窗口下，多种植园拼车、路面运输温控、货量与航班舱位匹配、全链可追溯给欧盟买方——这是纯<strong>调度和信息层问题</strong>，恰好落在软件可覆盖的范围。中国在生鲜冷链数字化（IoT 温控、B2B 撮合、履约可视化）已有成熟产品链，可直接输出。<strong>独立产品、独立组织</strong>，不与路径 1 共用资源。
+        <div class="step-block">
+          <span class="step-tag">Step 1 · 3 年内</span>
+          <strong>出口型鲜活冷链：</strong><em>海外需求约束强、问题在本地</em>——KFC + Rabobank 正推"2030 年 50% 海运替代空运"，这本身就是一个<strong>冷链调度层项目</strong>。
+          <button type="button" class="inline-more" data-expand-target="thesis-ke1">数据</button>
+          <div class="inline-expand" id="thesis-ke1" hidden>
+            鲜切花 2024 出口 <strong>$7.2 亿</strong>，65% 直接进欧盟（玫瑰对荷兰 62%、对英国 10%）。叠加四季豆/豌豆等出口蔬菜，真正会为软件付费的是 Oserian、Sian Roses 等本地出口商 / packhouse / 协调方；欧盟采购商提供 SLA、合规与价格压力。中国在生鲜冷链数字化（IoT 温控、B2B 撮合、履约可视化）已有成熟产品链。
+          </div>
+        </div>
+        <div class="step-block">
+          <span class="step-tag">Step 2 · 5-10 年</span>
+          <strong>国内食品链效率提升：</strong><em>人口红利 + 高恩格尔系数</em>，人口 <strong>5,600 万</strong>、中位年龄 20 岁，国内园艺损耗 30-50%。
+          <button type="button" class="inline-more" data-expand-target="thesis-ke2">数据</button>
+          <div class="inline-expand" id="thesis-ke2" hidden>
+            食品支出占家庭支出 40%+；年损失 KES 900-1500 亿（FAO / Kenya Ministry of Agriculture）。中产扩张与现代渠道渗透使需求从"政府补贴驱动"转向"零售商驱动"。Step 1 的能力栈（温控 IoT、多点调度、可追溯）可平移复用。
+          </div>
+        </div>
+        <div class="thesis-foot"><strong>独立产品、独立组织，不与路径 1 共用资源。</strong></div>
       </div>
     </div>
   </div>
 
-  <h3 style="font-size:17px;font-weight:700;margin:24px 0 12px;color:#14140f">需进一步信息评估论证的市场</h3>
+  <h3 style="font-size:15px;font-weight:700;margin:24px 0 12px;color:var(--ink)">需进一步信息评估论证的市场</h3>
   <div class="sub-rec-grid">
     <div class="sub-rec wait">
       <div class="sub-rec-head"><span class="sub-rec-title">印尼</span><span class="sub-rec-tag">需进一步论证</span></div>
@@ -1142,7 +1734,7 @@ body.editing .zoom-btn { display: none; }
     </div>
   </div>
 
-  <h3 style="font-size:17px;font-weight:700;margin:28px 0 12px;color:#14140f">暂不建议 · 条件不足</h3>
+  <h3 style="font-size:17px;font-weight:700;margin:28px 0 12px;color:var(--ink)">暂不建议 · 条件不足</h3>
   <div class="sub-rec-grid">
     <div class="sub-rec no">
       <div class="sub-rec-head"><span class="sub-rec-title">泰国 / 马来</span><span class="sub-rec-tag">暂不建议</span></div>
@@ -1170,35 +1762,48 @@ body.editing .zoom-btn { display: none; }
   <h2 class="sec-title collapse-head" data-collapse-target="weak-body">
     <span class="collapse-caret" aria-hidden="true">▸</span>
     <span>已知的推导弱点</span>
-    <span class="collapse-count">6 项</span>
+    <span class="collapse-count">7 项</span>
   </h2>
-  <p class="sec-body">诚实披露本报告未完全闭合的逻辑和数据局限：<span class="collapse-hint">（点击标题展开）</span></p>
+  <p class="sec-body">未闭合逻辑与数据局限：<span class="collapse-hint">（点击标题展开）</span></p>
 
   <div class="collapse-body" id="weak-body" hidden>
-  <div class="insight gray">
-    <strong>弱点 1 · 物流成本/GDP 精度有限：</strong>仅中国（发改委 14.4%）和印度（NCAER 2024 8.9%）有官方数据。其他国为多源区间估算，精度差异大。
+  <div class="weak-item">
+    <div class="weak-title"><strong>弱点 0</strong> · 候选池收敛依赖半定量阈值 <button type="button" class="inline-more" data-expand-target="w0">详情</button></div>
+    <div class="inline-expand" id="w0" hidden>第 0 层阶段 1-3 用 World Bank 收入分组与 IMF/UN 官方数据（可复核）；阶段 4 的"贸易强度 Top 25""本地 SaaS 饱和""海外需求约束 + 本地出口商付费能力"仍依赖半定量判断。孟加拉、土耳其、埃及、智利/秘鲁/厄瓜多尔等边界候选若集团战略偏好不同可能重新进入。</div>
   </div>
-  <div class="insight gray">
-    <strong>弱点 2 · 越南第 2 层单看不够强：</strong>LPI 子维度显示越南信息层和基础设施差距同量级，第 2 层仅排除拉美（基建主导），未单独锁定越南。真正支撑越南推荐的是第 3-4 层（制造业外溢 + 集团资源）。
+  <div class="weak-item">
+    <div class="weak-title"><strong>弱点 1</strong> · 物流成本/GDP 不宜直接跨国横比 <button type="button" class="inline-more" data-expand-target="w1">详情</button></div>
+    <div class="inline-expand" id="w1" hidden>各国"物流成本"统计边界、是否含库存持有/分销、分母年份与币值处理均不一致。本版改为 LPI + 拥堵 / 港口 / 通关等公开信号构造 proxy。</div>
   </div>
-  <div class="insight gray">
-    <strong>弱点 3 · 命名口径需澄清：</strong>中国 LPI 3.7 ≈ 美国 3.8，中国物流效率并非全球领先。本框架所谓"能力溢出套利"指的是中国已在本土摊销研发与组织成本，<strong>用成本优势输出到效率洼地</strong>——核心机制是<strong>成本结构</strong>而非<strong>效率领先</strong>。
+  <div class="weak-item">
+    <div class="weak-title"><strong>弱点 2</strong> · 越南第 2 层单看不够强 <button type="button" class="inline-more" data-expand-target="w2">详情</button></div>
+    <div class="inline-expand" id="w2" hidden>LPI 子维度显示越南信息层和基础设施差距同量级，第 2 层仅排除拉美（基建主导），未单独锁定越南。真正支撑越南推荐的是第 3-4 层（制造业外溢 + 集团资源）。</div>
   </div>
-  <div class="insight gray">
-    <strong>弱点 4 · 肯尼亚"数字化可解损耗占比"是估算：</strong>无严格量化来源。实际可能在 10-30% 区间。
+  <div class="weak-item">
+    <div class="weak-title"><strong>弱点 3</strong> · "能力溢出"是成本结构而非效率领先 <button type="button" class="inline-more" data-expand-target="w3">详情</button></div>
+    <div class="inline-expand" id="w3" hidden>中国 LPI 3.7 ≈ 美国 3.8，中国物流效率并非全球领先。所谓"能力溢出套利"指中国已在本土摊销研发与组织成本，<strong>用成本优势输出到效率洼地</strong>——核心机制是<strong>成本结构</strong>而非<strong>效率领先</strong>。</div>
   </div>
-  <div class="insight gray">
-    <strong>弱点 5 · 云计算分国增速用区间值：</strong>Gartner/IDC 精确数字需付费获取。精度足够做拐点判断但不适合精确对比。
+  <div class="weak-item">
+    <div class="weak-title"><strong>弱点 4</strong> · 肯尼亚"数字化可解损耗占比"是估算 <button type="button" class="inline-more" data-expand-target="w4">详情</button></div>
+    <div class="inline-expand" id="w4" hidden>无严格量化来源。实际可能在 10-30% 区间。</div>
   </div>
-  <div class="insight gray">
-    <strong>弱点 6 · 集团资源布局为外部评估：</strong>Harvey ball 打分依据公开年报方向性描述，<strong>非分子公司精确 KPI。集团内部数据可进一步精化此层判断。</strong>
+  <div class="weak-item">
+    <div class="weak-title"><strong>弱点 5</strong> · 云计算分国增速用区间值 <button type="button" class="inline-more" data-expand-target="w5">详情</button></div>
+    <div class="inline-expand" id="w5" hidden>Gartner / IDC 精确数字需付费获取。精度足够做拐点判断但不适合精确对比。</div>
+  </div>
+  <div class="weak-item">
+    <div class="weak-title"><strong>弱点 6</strong> · 集团资源布局为外部评估 <button type="button" class="inline-more" data-expand-target="w6">详情</button></div>
+    <div class="inline-expand" id="w6" hidden>Harvey ball 打分依据公开年报方向性描述，<strong>非分子公司精确 KPI。集团内部数据可进一步精化此层判断。</strong></div>
   </div>
   </div>
 </div>
 
 <div class="data-note">
-  <strong>主要数据来源：</strong>World Bank LPI 2023 | NCAER/DPIIT《Logistics Cost in India》2024 | World Bank National Accounts Data | Statista Digital Market Outlook 2024 | IDC/Gartner Cloud Market Forecast | FAO SOFA 2019 | Safaricom Annual Report 2024 | GSMA Mobile Money 2024 | 集团及关联物流上市公司 2023-2024 年度报告。<br><br>
-  <strong>精度说明：</strong>高精度数据直接引用；中精度用区间；低精度做定性打分。"约""~""区间"表述提示该数值精度有限。
+  <strong>数据与精度说明</strong> <button type="button" class="inline-more" data-expand-target="data-note-expand">展开</button>
+  <div class="inline-expand" id="data-note-expand" hidden style="margin-top:10px;font-size:12.5px;">
+    <strong>主要来源：</strong>World Bank LPI 2023 | TomTom Traffic Index 2024-2025 | World Bank National Accounts | 各国公开港口/道路/通关资料 | Statista Digital Market Outlook 2024 | IDC/Gartner Cloud Forecast | FAO SOFA 2019 | Safaricom Annual Report 2024 | GSMA Mobile Money 2024 | 集团及关联物流上市公司 2023-2024 年报。<br><br>
+    <strong>精度：</strong>高精度数据直接引用；中精度用区间；低精度做定性打分。LPI、人口、家庭车辆使用率等官方数据可逐项复核；第 1 层不再使用物流成本/GDP 做跨国硬横比，改为基于 LPI 子项 + 拥堵 + 港口 + 通关信号的 proxy；分国云增速、集团资源打分等含区间估算或外部判断。"约""~""区间"表述提示精度有限。
+  </div>
 </div>
 
 </div>
@@ -1226,37 +1831,88 @@ body.editing .zoom-btn { display: none; }
   };
 
   /* ---------- Editable mode ---------- */
-  // Text-bearing selectors. SVG text / charts are excluded on purpose.
-  var EDITABLE_SELECTOR = [
+  // Force-edit selectors handle mixed-content containers; auto-detect fills the remaining text gaps.
+  var EDITABLE_FORCE_SELECTOR = [
     'h1','h2','h3','h4','h5',
     'p','li','td','th','caption','figcaption','blockquote',
-    '.sec-label','.sec-body','.step-text','.step-sub',
+    '.hero-title','.hero-eyebrow','.hero-sub','.hero-verdict',
+    '.sec-label','.sec-body','.step-num','.step-text','.step-sub',
     '.mk-action','.mk-subtitle','.mk-source',
-    '.insight','.fw-h','.fw-desc','.fw-col-title','.fw-col-sub',
+    '.insight','.global-note','.data-note',
+    '.fw-h','.fw-d','.fw-m','.fw-num','.fw-col-label','.fw-col-title','.fw-col-sub',
     '.rec-type','.rec-thesis','.rec-country','.rec-badge',
     '.sub-rec-label','.sub-rec-body',
     '.hbar-label','.hbar-val',
-    '.hero-eyebrow','.hero-sub','.hero-verdict',
-    '.global-note','.tab-btn',
+    '.tab-btn','.tab-eyebrow',
     '.lg-item','.lg-note','.lg-title',
     '.type-card-label','.type-card-title','.type-card-body',
-    '.conclusion-box','.conclusion-title','.conclusion-body'
+    '.conclusion-box','.conclusion-title','.conclusion-body',
+    '.stage-label','.stage-criteria','.stage-source','.stage-unit','.stage-num',
+    '.fork-title','.fork-tag','.fork-result-label','.fork-result-count','.fork-chip','.rc-unit',
+    '.final-label','.final-value','.final-note',
+    '.toc-num','.toc-tag'
   ].join(',');
+  var EDITABLE_EXCLUDE_SELECTOR = [
+    '.toolbar','.toolbar *',
+    '#chart-modal','#chart-modal *',
+    '#chart-tooltip','#chart-tooltip *',
+    '.zoom-btn','.zoom-btn *',
+    '.cm-close','.cm-close *',
+    'script','style','svg','svg *'
+  ].join(',');
+
+  function hasDirectText(el) {
+    return Array.prototype.some.call(el.childNodes, function(node){
+      return node.nodeType === 3 && /\S/.test(node.textContent || '');
+    });
+  }
+  function isAutoEditable(el) {
+    if (!el || !el.tagName) return false;
+    if (el.matches(EDITABLE_EXCLUDE_SELECTOR)) return false;
+    if (el.closest('.chart-modal-body') || el.closest('.toolbar') || el.closest('#chart-tooltip')) return false;
+    if (el.classList.contains('zoom-btn') || el.closest('.zoom-btn')) return false;
+    if (el.tagName === 'BUTTON' && !el.classList.contains('tab-btn')) return false;
+    if (['SCRIPT','STYLE','SVG','PATH','RECT','CIRCLE','LINE','POLYLINE','POLYGON','G','TEXT'].indexOf(el.tagName) !== -1) return false;
+    if (!hasDirectText(el)) return false;
+    return !Array.prototype.some.call(el.children, function(child){
+      return child && child.tagName && child.matches('div,p,ul,ol,table,thead,tbody,tr,section,article,svg');
+    });
+  }
+  function collectEditableNodes() {
+    var nodes = [];
+    function pushNode(el) {
+      if (!el) return;
+      if (nodes.some(function(existing){ return existing === el || existing.contains(el); })) return;
+      nodes = nodes.filter(function(existing){ return !el.contains(existing); });
+      nodes.push(el);
+    }
+    document.querySelectorAll(EDITABLE_FORCE_SELECTOR).forEach(function(el){
+      if (el.matches(EDITABLE_EXCLUDE_SELECTOR)) return;
+      if (el.closest('.chart-modal-body')) return;
+      pushNode(el);
+    });
+    document.querySelectorAll('body *').forEach(function(el){
+      if (el.closest(EDITABLE_FORCE_SELECTOR)) return;
+      if (isAutoEditable(el)) pushNode(el);
+    });
+    return nodes;
+  }
 
   var editToggle = document.getElementById('edit-toggle');
   var editOn = false;
   function setEditable(on) {
     editOn = on;
     document.body.classList.toggle('editing', on);
-    document.querySelectorAll(EDITABLE_SELECTOR).forEach(function(el){
-      // Skip nodes inside chart modals (avoid dup editing on clones)
-      if (el.closest('.chart-modal-body')) return;
+    if (!on) {
+      document.querySelectorAll('[contenteditable]').forEach(function(el){
+        el.removeAttribute('contenteditable');
+        el.removeAttribute('spellcheck');
+      });
+    }
+    collectEditableNodes().forEach(function(el){
       if (on) {
         el.setAttribute('contenteditable', 'true');
         el.setAttribute('spellcheck', 'false');
-      } else {
-        el.removeAttribute('contenteditable');
-        el.removeAttribute('spellcheck');
       }
     });
     editToggle.classList.toggle('active', on);
@@ -1412,6 +2068,27 @@ body.editing .zoom-btn { display: none; }
   }, { passive: true });
   updateActiveToc();
 
+  /* ---------- Hero quick jumps ---------- */
+  document.querySelectorAll('[data-jump-target]').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      var targetId = link.getAttribute('data-jump-target');
+      var tab = link.getAttribute('data-jump-tab') || '';
+      scrollToSection(targetId, tab);
+    });
+  });
+
+  /* ---------- Inline "learn more" expansions ---------- */
+  document.querySelectorAll('[data-expand-target]').forEach(function(btn){
+    var tgt = document.getElementById(btn.getAttribute('data-expand-target'));
+    if (!tgt) return;
+    btn.addEventListener('click', function(){
+      var open = !tgt.hasAttribute('hidden');
+      if (open) { tgt.setAttribute('hidden',''); btn.classList.remove('is-open'); }
+      else { tgt.removeAttribute('hidden'); btn.classList.add('is-open'); }
+    });
+  });
+
   /* ---------- Collapsible sections ---------- */
   document.querySelectorAll('.collapse-head').forEach(function(head){
     var targetId = head.getAttribute('data-collapse-target');
@@ -1424,6 +2101,33 @@ body.editing .zoom-btn { display: none; }
     });
   });
 
+  /* ---------- Collapse sources / methodology notes ---------- */
+  document.querySelectorAll('.mk-source, .data-note').forEach(function(block){
+    if (block.dataset.collapsibleReady === '1') return;
+    var wrap = document.createElement('div');
+    wrap.className = 'source-wrap';
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'source-toggle';
+    var isDataNote = block.classList.contains('data-note');
+    btn.innerHTML = '<span>' + (isDataNote ? '总数据口径与精度说明' : '来源与口径') + '</span><span style="display:flex;align-items:center;gap:8px"><span class="st-meta">默认收起</span><span class="st-caret">›</span></span>';
+    var bodyWrap = document.createElement('div');
+    bodyWrap.className = 'source-body';
+    bodyWrap.hidden = true;
+    var parent = block.parentNode;
+    parent.insertBefore(wrap, block);
+    wrap.appendChild(btn);
+    wrap.appendChild(bodyWrap);
+    bodyWrap.appendChild(block);
+    block.dataset.collapsibleReady = '1';
+    btn.addEventListener('click', function(){
+      var isOpen = !bodyWrap.hidden;
+      bodyWrap.hidden = isOpen;
+      wrap.classList.toggle('open', !isOpen);
+      btn.querySelector('.st-meta').textContent = isOpen ? '默认收起' : '点击收起';
+    });
+  });
+
   /* ---------- Scatter bubble tooltips ---------- */
   // Raw data per country per chart (index 0/1/2 maps to scatter 1/2/3)
   // chart 0: efficiency-gap (logistics cost% / LPI)
@@ -1431,18 +2135,18 @@ body.editing .zoom-btn { display: none; }
   // chart 2: manufacturing base & growth
   var TT_DATA = {
     0: { // Chart 1
-      '中国':   { rows: [['物流成本 / GDP','14.4%'], ['LPI 总分','3.7']], note: '基准线：发改委官方数据' },
-      '越南':   { rows: [['物流成本 / GDP','16-20%'], ['LPI 总分','3.3']], note: 'VLA 估算，洼地信号最明显' },
-      '印度':   { rows: [['物流成本 / GDP','8.9%（修正）'], ['LPI 总分','3.4']], note: 'NCAER / DPIIT 2024。从洼地滑出，信号矛盾' },
-      '印尼':   { rows: [['物流成本 / GDP','≈23%'], ['LPI 总分','3.0']], note: '成本高但基础设施短板主导' },
-      '巴西':   { rows: [['物流成本 / GDP','≈12-13%'], ['LPI 总分','3.2']], note: 'IPEA 估算' },
-      '泰国':   { rows: [['物流成本 / GDP','≈13-14%'], ['LPI 总分','3.5']], note: '效率已接近中国水平' },
-      '马来':   { rows: [['物流成本 / GDP','≈13%'], ['LPI 总分','3.6']], note: '小体量 + 高效率，套利空间薄' },
-      '沙特':   { rows: [['物流成本 / GDP','≈14%'], ['LPI 总分','3.4']], note: '效率洼地偏小' },
-      '墨西哥': { rows: [['物流成本 / GDP','≈12-15%'], ['LPI 总分','3.1']], note: '成本高，但根因在基建' },
-      '菲律宾': { rows: [['物流成本 / GDP','数据缺失'], ['LPI 总分','3.0']], note: '样本外，虚线示意' },
-      '肯尼亚': { rows: [['物流成本 / GDP','数据缺失'], ['LPI 总分','≈2.8']], note: '样本外，作为路径 2 候选' },
-      '尼日利亚': { rows: [['物流成本 / GDP','数据缺失'], ['LPI 总分','≈2.6']], note: '样本外，路径 2 对照' }
+      '中国':   { rows: [['物流摩擦 proxy','低'], ['LPI 总分','3.7']], note: '基准线：世界银行 LPI + 中国公开物流运行数据' },
+      '越南':   { rows: [['物流摩擦 proxy','高'], ['LPI 总分','3.3']], note: '拥堵、港口与末端履约压力叠加，优先研究信号最集中' },
+      '印度':   { rows: [['物流摩擦 proxy','中高'], ['LPI 总分','3.4']], note: '不再用 8.9% 成本率直接否定摩擦，但信号不如越南集中' },
+      '印尼':   { rows: [['物流摩擦 proxy','很高'], ['LPI 总分','3.0']], note: '群岛结构 + 基建短板，摩擦高但更多超出软件边界' },
+      '巴西':   { rows: [['物流摩擦 proxy','中高'], ['LPI 总分','3.2']], note: '长距离干线与港口瓶颈并存' },
+      '泰国':   { rows: [['物流摩擦 proxy','中'], ['LPI 总分','3.5']], note: '效率接近中国，套利空间偏薄' },
+      '马来':   { rows: [['物流摩擦 proxy','低'], ['LPI 总分','3.6']], note: '小体量 + 高效率，机会更多在区域协同' },
+      '沙特':   { rows: [['物流摩擦 proxy','中'], ['LPI 总分','3.4']], note: '摩擦存在，但效率差并不深' },
+      '墨西哥': { rows: [['物流摩擦 proxy','高'], ['LPI 总分','2.9']], note: '摩擦偏高，但根因更接近基础设施与地理约束' },
+      '菲律宾': { rows: [['物流摩擦 proxy','高'], ['LPI 总分','3.3']], note: '样本外参考：岛屿结构 + 城市拥堵导致摩擦偏高' },
+      '肯尼亚': { rows: [['物流摩擦 proxy','高'], ['LPI 总分','2.81']], note: '样本外：作为路径 2 候选，重点在鲜活冷链与国内食品链效率' },
+      '尼日利亚': { rows: [['物流摩擦 proxy','很高'], ['LPI 总分','2.6']], note: '样本外对照：摩擦高，但落地复杂度也最高' }
     },
     1: { // Chart 2
       '中国':   { rows: [['信息层差距','0（基准）'], ['基础设施差距','0（基准）']], note: '原点 = 中国水平' },
@@ -1457,17 +2161,17 @@ body.editing .zoom-btn { display: none; }
       '菲律宾': { rows: [['信息层差距','-0.55'], ['基础设施差距','-0.6']], note: '两类同量级，样本参考' }
     },
     2: { // Chart 3
-      '中国':   { rows: [['制造业 / GDP','≈27%'], ['5 年平均增速','≈6%']], note: '基准：全球制造业体量第一' },
-      '越南':   { rows: [['制造业 / GDP','≈24%'], ['5 年平均增速','≈9%']], note: '占比深 + 高增速，样本中唯一兼得' },
-      '印度':   { rows: [['制造业 / GDP','≈13%'], ['5 年平均增速','≈5%']], note: '占比偏低但绝对体量全球前五，客户以本土集团为主' },
+      '中国':   { rows: [['制造业 / GDP','24.87%'], ['5 年平均增速','≈6%']], note: '基准：全球制造业体量第一' },
+      '越南':   { rows: [['制造业 / GDP','≈24%'], ['5 年平均增速','7.06%'], ['说明','高增长，但不再写成“唯一兼得”']], note: '底盘深且仍保持较快增长，是样本中最突出的组合' },
+      '印度':   { rows: [['制造业 / GDP','≈13%'], ['5 年平均增速','≈5%']], note: '占比偏低但绝对体量全球前列，客户以本土集团为主' },
       '印尼':   { rows: [['制造业 / GDP','≈19%'], ['5 年平均增速','≈4%']], note: '体量中等，增速温和' },
-      '泰国':   { rows: [['制造业 / GDP','≈25%'], ['5 年平均增速','≈-1%']], note: '占比深但处于停滞/下滑' },
-      '马来':   { rows: [['制造业 / GDP','≈22%'], ['5 年平均增速','≈0%']], note: '增长乏力' },
-      '墨西哥': { rows: [['制造业 / GDP','≈18%'], ['5 年平均增速','≈-1%']], note: 'Nearshore 叙事未转化为增速' },
-      '菲律宾': { rows: [['制造业 / GDP','≈17%'], ['5 年平均增速','≈3%']], note: '底盘一般' },
-      '沙特':   { rows: [['制造业 / GDP','≈12%（非石油）'], ['5 年平均增速','≈3%']], note: '非石油口径，体量小' },
-      '巴西':   { rows: [['制造业 / GDP','≈10%'], ['5 年平均增速','≈-1%']], note: '三个维度皆弱' },
-      '尼日利亚': { rows: [['制造业 / GDP','≈12%'], ['5 年平均增速','≈-2%']], note: '制造业萎缩' },
+      '泰国':   { rows: [['制造业 / GDP','≈25%'], ['5 年平均增速','≈-1%']], note: '占比深，但近年偏停滞' },
+      '马来':   { rows: [['制造业 / GDP','≈22%'], ['5 年平均增速','3.92%']], note: '不是“零增长”，但已不属于最快一档' },
+      '墨西哥': { rows: [['制造业 / GDP','19.80%'], ['5 年平均增速','1.31%']], note: 'Nearshore 有承接，但增速并未显著领先样本' },
+      '菲律宾': { rows: [['制造业 / GDP','15.68%'], ['5 年平均增速','≈3%']], note: '底盘一般' },
+      '沙特':   { rows: [['制造业 / GDP','15.72%'], ['5 年平均增速','4.34%']], note: '改为与其他国家一致的制造业总口径后，中等偏上' },
+      '巴西':   { rows: [['制造业 / GDP','12.11%'], ['5 年平均增速','0.12%']], note: '不是负增长，但整体仍偏弱' },
+      '尼日利亚': { rows: [['制造业 / GDP','8.66%'], ['5 年平均增速','≈-2%']], note: '制造业底盘偏薄' },
       '肯尼亚': { rows: [['制造业 / GDP','≈7%'], ['5 年平均增速','≈3%']], note: '路径 2：不依赖制造业底盘' }
     }
   };
@@ -1569,10 +2273,47 @@ body.editing .zoom-btn { display: none; }
       var chartIdx = parseInt(c.getAttribute('data-chart'), 10);
       var d = TT_DATA[chartIdx] && TT_DATA[chartIdx][country];
       showTooltip(d, country, chartIdx, t.clientX, t.clientY);
-    } else if (tooltipEl.classList.contains('visible')) {
-      hideTooltip();
+    } else {
+      var stageHit = e.target.closest && e.target.closest('[data-stage-list]');
+      if (stageHit) {
+        if (editOn) return;
+        e.preventDefault();
+        if (activeHit === stageHit) { hideTooltip(); return; }
+        activeHit = stageHit;
+        var tt = e.touches[0];
+        showStageTip(stageHit, tt.clientX, tt.clientY);
+      } else if (tooltipEl.classList.contains('visible')) {
+        hideTooltip();
+      }
     }
   }, { passive: false });
+
+  /* ---------- Stage-count list tooltip (Layer 0) ---------- */
+  function showStageTip(el, clientX, clientY) {
+    var title = el.getAttribute('data-stage-title') || '';
+    var list = el.getAttribute('data-stage-list') || '';
+    var count = el.getAttribute('data-stage-count') || '';
+    tooltipEl.classList.add('stage-tip');
+    var html = '<div class="tt-country">' + title;
+    if (count) html += '<span class="tt-badge">' + count + ' 国/经济体</span>';
+    html += '</div><div class="tt-list">' + list + '</div>';
+    tooltipEl.innerHTML = html;
+    tooltipEl.classList.add('visible');
+    positionTooltip(clientX, clientY);
+  }
+  document.addEventListener('mouseover', function(e){
+    var stageHit = e.target.closest && e.target.closest('[data-stage-list]');
+    if (!stageHit) return;
+    if (editOn) return;
+    activeHit = stageHit;
+    showStageTip(stageHit, e.clientX, e.clientY);
+  });
+  document.addEventListener('mouseout', function(e){
+    var stageHit = e.target.closest && e.target.closest('[data-stage-list]');
+    if (!stageHit) return;
+    hideTooltip();
+    tooltipEl.classList.remove('stage-tip');
+  });
 
 })();
 </script>
